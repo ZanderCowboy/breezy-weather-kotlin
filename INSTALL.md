@@ -6,7 +6,6 @@ Install it and you’re done!
 
 After adding your first location, you will be asked if you want to be notified of app updates. We highly recommend you enable it.
 
-
 # Detailed instructions
 
 ## Flavors
@@ -17,10 +16,10 @@ For specific needs, we also offer a flavor with only free-network sources (libre
 
 Both flavors are signed with the same signature, so you can easily try/switch between both.
 
-
 ## Sources to get Breezy Weather from
 
 **Breezy Weather** releases are available from the following sources:
+
 - **[GitHub releases](https://github.com/breezy-weather/breezy-weather/releases)** is where releases built by GitHub are published under APK format. Any Android device can install APK files without needing any particular app. If you have a GitHub account, you can subscribe to be notified of updates, however it’s more convenient to use a store app to track updates. Due to technical limitations, this is also the only source to provide architecture-specific APKs, although the difference between them and the universal APK is of a negligible 2 MB, so it should not be a criteria of choice.
 - **[Breezy Weather’s F-Droid repositories](https://github.com/breezy-weather/fdroid-repo/blob/main/README.md)** are maintained by Breezy Weather developers and get updates from a F-Droid client that doesn’t support receiving updates from GitHub.
 - **[Izzy F-Droid repository](https://apt.izzysoft.de/fdroid/index/info)** offers the standard flavor which is our recommended choice if you would like someone to independently review the app before it gets published. Updates are fast (less than 24 hours).
@@ -35,7 +34,6 @@ Both flavors are signed with the same signature, so you can easily try/switch be
 | Independently reviewed     | ❌               | ❌                             | ✅                      | ✅                         |
 | Architecture-specific APKs | ✅               | ❌                             | ❌                      | ❌                         |
 
-
 ### Other not supported well-known sources
 
 - Google Play Store:
@@ -43,7 +41,6 @@ Both flavors are signed with the same signature, so you can easily try/switch be
   - Is privacy invasive for the developer (requires sending your ID and giving your phone number)
   - We don’t [comply with Google Play policy](https://github.com/breezy-weather/breezy-weather/issues/31)
 - Accrescent: waiting for it to become stable (no ETA announced by upstream)
-
 
 ## Client configuration instructions
 
@@ -54,6 +51,7 @@ Both flavors are signed with the same signature, so you can easily try/switch be
 #### Getting updates from GitHub releases
 
 In the “Add App” screen:
+
 1. Add the following URL: `https://github.com/breezy-weather/breezy-weather`
 2. To receive updates for prereleases, enable “Include prereleases”
 3. (Optional) If you want the flavor with only free network sources, add `freenet` in the “Filter APKs by Regular Expression”
@@ -62,13 +60,13 @@ In the “Add App” screen:
 #### Getting updates from a F-Droid repository
 
 In the “Add App” screen, just add as App Source URL the following URL depending on the repository you want to use:
-   - Standard flavor from Izzy repo: `https://apt.izzysoft.de/fdroid/index/apk/org.breezyweather`
-   - Standard flavor from Breezy Weather repo: configure Obtainium to use GitHub releases instead (see previous section)
-   - Free-net flavor from Breezy Weather repo: configure Obtainium to use GitHub releases instead (see previous section)
-   - Free-net flavor from default F-Droid repo: `https://f-droid.org/packages/org.breezyweather/`
+
+- Standard flavor from Izzy repo: `https://apt.izzysoft.de/fdroid/index/apk/org.breezyweather`
+- Standard flavor from Breezy Weather repo: configure Obtainium to use GitHub releases instead (see previous section)
+- Free-net flavor from Breezy Weather repo: configure Obtainium to use GitHub releases instead (see previous section)
+- Free-net flavor from default F-Droid repo: `https://f-droid.org/packages/org.breezyweather/`
 
 Tap the “Add” button at the very top, and you’re done!
-
 
 ### F-Droid client
 
