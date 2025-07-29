@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Data Classes - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-database"></i> Chapter 2: Data Classes</h1>
+            <p>Master Kotlin's data classes with real weather model examples</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="chapterProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/4 sections completed</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                What are Data Classes?
+            </h2>
+
+            <p>Data classes are Kotlin's superpower for creating simple classes that primarily hold data. Think of them
+                as smart containers that automatically generate useful methods for you! 📦</p>
+
+            <div class="concept-card" onclick="completeSection('data-basics')">
+                <h4><i class="fas fa-play-circle"></i> Core Concept: Smart Data Containers</h4>
+                <p>Discover why data classes are better than regular classes for holding data</p>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-magic"></i> Data Class Magic: C.E.T.H</h4>
+                <p><strong>C</strong>opy function - clone with modifications</p>
+                <p><strong>E</strong>quals - smart object comparison</p>
+                <p><strong>T</strong>oString - pretty string representation</p>
+                <p><strong>H</strong>ashCode - for use in collections (HashMap, HashSet)</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('comparison')">vs Regular Classes</button>
+                    <button class="tab-btn" onclick="switchTab('auto-generated')">Auto-Generated Methods</button>
+                    <button class="tab-btn" onclick="switchTab('when-to-use')">When to Use</button>
+                </div>
+
+                <div class="tab-content active" id="comparison">
+                    <h3>⚖️ Data Class vs Regular Class</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="background: #fed7d7; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #e53e3e;">Regular Class (Java-style)</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-keyword">class</span> <span class="kotlin-type">Person</span>(
+    <span class="kotlin-keyword">val</span> name: <span class="kotlin-type">String</span>,
+    <span class="kotlin-keyword">val</span> age: <span class="kotlin-type">Int</span>
+) {
+    <span class="kotlin-comment">// Must manually implement:</span>
+    <span class="kotlin-keyword">override fun</span> equals(other: <span class="kotlin-type">Any?</span>): <span class="kotlin-type">Boolean</span>
+    <span class="kotlin-keyword">override fun</span> hashCode(): <span class="kotlin-type">Int</span>
+    <span class="kotlin-keyword">override fun</span> toString(): <span class="kotlin-type">String</span>
+    <span class="kotlin-comment">// copy() function? Write it yourself!</span>
+}</pre>
+                            </div>
+                            <p style="color: #e53e3e; font-size: 0.9em;">😰 Lots of boilerplate code!</p>
+                        </div>
+                        <div style="background: #e6fffa; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #38a169;">Data Class (Kotlin-style)</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-keyword">data class</span> <span class="kotlin-type">Person</span>(
+    <span class="kotlin-keyword">val</span> name: <span class="kotlin-type">String</span>,
+    <span class="kotlin-keyword">val</span> age: <span class="kotlin-type">Int</span>
+)
+
+<span class="kotlin-comment">// That's it! Kotlin auto-generates:</span>
+<span class="kotlin-comment">// - equals() and hashCode()</span>
+<span class="kotlin-comment">// - toString()</span>
+<span class="kotlin-comment">// - copy() function</span>
+<span class="kotlin-comment">// - componentN() functions</span></pre>
+                            </div>
+                            <p style="color: #38a169; font-size: 0.9em;">😍 Clean and concise!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="auto-generated">
+                    <h3>🤖 Auto-Generated Methods</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #4299e1;">📋 toString()</h4>
+                            <p style="color: #4a5568;">Provides a readable string representation</p>
+                            <code>Person(name=John, age=25)</code>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #4299e1;">⚖️ equals() & hashCode()</h4>
+                            <p style="color: #4a5568;">Smart comparison based on property values</p>
+                            <code>person1 == person2 // true if all properties match</code>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #4299e1;">📄 copy()</h4>
+                            <p style="color: #4a5568;">Clone object with optional modifications</p>
+                            <code>val older = person.copy(age = 26)</code>
+                        </div>
+                        <div>
+                            <h4 style="color: #4299e1;">🔢 componentN()</h4>
+                            <p style="color: #4a5568;">Destructuring support</p>
+                            <code>val (name, age) = person</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="when-to-use">
+                    <h3>🎯 When to Use Data Classes</h3>
+                    <div
+                        style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #38a169;">
+                        <h4 style="color: #38a169;">✅ Perfect for:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>API Models:</strong> JSON response objects</li>
+                            <li><strong>Database Entities:</strong> Room database tables</li>
+                            <li><strong>Configuration Objects:</strong> Settings, preferences</li>
+                            <li><strong>Value Objects:</strong> Coordinates, dates, measurements</li>
+                            <li><strong>State Holders:</strong> UI state, form data</li>
+                        </ul>
+                    </div>
+                    <div
+                        style="background: #fed7d7; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #e53e3e;">
+                        <h4 style="color: #e53e3e;">❌ Avoid for:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Complex Business Logic:</strong> Use regular classes</li>
+                            <li><strong>Inheritance Hierarchies:</strong> Data classes are final</li>
+                            <li><strong>No-parameter Classes:</strong> Must have at least one parameter</li>
+                            <li><strong>Mutable Heavy Classes:</strong> Consider regular classes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-cloud-rain"></i>
+                Real Code: Weather Data Models
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('weather-models')">
+                <h4><i class="fas fa-play-circle"></i> Explore Weather Data Classes</h4>
+                <p>See how BreezyWeather uses data classes for weather information</p>
+            </div>
+
+            <div class="file-explore-card">
+                <h4><i class="fas fa-folder-open"></i> Weather Model Files:</h4>
+                <ul>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/Wind.kt</code> - Wind data</li>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/Temperature.kt</code> -
+                        Temperature data</li>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/Weather.kt</code> - Main weather
+                        model</li>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/Precipitation.kt</code> -
+                        Rain/snow data</li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// From Wind.kt - Wind measurement data class</span>
+<span class="kotlin-keyword">data class</span> <span class="kotlin-type">Wind</span>(
+    <span class="kotlin-keyword">val</span> degree: <span class="kotlin-type">Double?</span> = <span class="kotlin-keyword">null</span>, <span class="kotlin-comment">// Wind direction in degrees</span>
+    <span class="kotlin-keyword">val</span> speed: <span class="kotlin-type">Double?</span> = <span class="kotlin-keyword">null</span>, <span class="kotlin-comment">// Wind speed</span>
+    <span class="kotlin-keyword">val</span> gusts: <span class="kotlin-type">Double?</span> = <span class="kotlin-keyword">null</span>, <span class="kotlin-comment">// Wind gusts</span>
+) : <span class="kotlin-type">Serializable</span> { <span class="kotlin-comment">// Can be serialized for storage</span>
+
+    <span class="kotlin-comment">// 🏃‍♂️ Custom property with getter</span>
+    <span class="kotlin-keyword">val</span> isValid: <span class="kotlin-type">Boolean</span>
+        <span class="kotlin-keyword">get</span>() = speed != <span class="kotlin-keyword">null</span> && speed > <span class="kotlin-string">0</span>
+
+    <span class="kotlin-comment">// 🧭 Wind direction arrow based on degrees</span>
+    <span class="kotlin-keyword">val</span> arrow: <span class="kotlin-type">String?</span>
+        <span class="kotlin-keyword">get</span>() = <span class="kotlin-keyword">when</span> (degree) {
+            <span class="kotlin-keyword">null</span> -> <span class="kotlin-keyword">null</span>
+            <span class="kotlin-string">-1.0</span> -> <span class="kotlin-string">"⟳"</span> <span class="kotlin-comment">// Variable wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">22.5..67.5</span> -> <span class="kotlin-string">"↙"</span> <span class="kotlin-comment">// Northeast wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">67.5..112.5</span> -> <span class="kotlin-string">"←"</span> <span class="kotlin-comment">// East wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">112.5..157.5</span> -> <span class="kotlin-string">"↖"</span> <span class="kotlin-comment">// Southeast wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">157.5..202.5</span> -> <span class="kotlin-string">"↑"</span> <span class="kotlin-comment">// South wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">202.5..247.5</span> -> <span class="kotlin-string">"↗"</span> <span class="kotlin-comment">// Southwest wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">247.5..292.5</span> -> <span class="kotlin-string">"→"</span> <span class="kotlin-comment">// West wind</span>
+            <span class="kotlin-keyword">in</span> <span class="kotlin-string">292.5..337.5</span> -> <span class="kotlin-string">"↘"</span> <span class="kotlin-comment">// Northwest wind</span>
+            <span class="kotlin-keyword">else</span> -> <span class="kotlin-string">"↓"</span> <span class="kotlin-comment">// North wind</span>
+        }
+}</pre>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('features-breakdown')">Advanced Features</button>
+                    <button class="tab-btn" onclick="switchTab('nullable-types')">Nullable Types</button>
+                    <button class="tab-btn" onclick="switchTab('when-expressions')">When Expressions</button>
+                    <button class="tab-btn" onclick="switchTab('custom-getters')">Custom Getters</button>
+                </div>
+
+                <div class="tab-content active" id="features-breakdown">
+                    <h3>🚀 Advanced Features in Wind Data Class</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><code>Double?</code> - Nullable types (can hold null values) 🤲</li>
+                            <li><code>= null</code> - Default parameter values (optional parameters)</li>
+                            <li><code>: Serializable</code> - Interface implementation for data persistence</li>
+                            <li><code>get() = ...</code> - Custom property getters for computed values</li>
+                            <li><code>when (degree)</code> - Smart switch statement with pattern matching</li>
+                            <li><code>in 22.5..67.5</code> - Range expressions for number ranges</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="nullable-types">
+                    <h3>🤲 Null Safety: The Kotlin Way</h3>
+                    <p>Kotlin eliminates the billion-dollar mistake (NullPointerException) with null safety!</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Nullable vs Non-nullable types</span>
+<span class="kotlin-keyword">val</span> speed: <span class="kotlin-type">Double</span> = <span class="kotlin-string">10.5</span> <span class="kotlin-comment">// Cannot be null</span>
+<span class="kotlin-keyword">val</span> gusts: <span class="kotlin-type">Double?</span> = <span class="kotlin-keyword">null</span> <span class="kotlin-comment">// Can be null</span>
+
+<span class="kotlin-comment">// Safe operations</span>
+<span class="kotlin-keyword">val</span> isWindy = speed > <span class="kotlin-string">10</span> <span class="kotlin-comment">// ✅ Direct access</span>
+<span class="kotlin-keyword">val</span> hasGusts = gusts?.let { it > <span class="kotlin-string">15</span> } ?: <span class="kotlin-keyword">false</span> <span class="kotlin-comment">// ✅ Safe call</span>
+
+<span class="kotlin-comment">// This won't compile! Null safety at compile time</span>
+<span class="kotlin-comment">// val dangerous = gusts > 15 // ❌ Compiler error</span></pre>
+                    </div>
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="color: #38a169;">🛡️ Null Safety Operators:</h4>
+                        <ul style="color: #4a5568;">
+                            <li><code>?.</code> - Safe call (returns null if receiver is null)</li>
+                            <li><code>?:</code> - Elvis operator (default value if null)</li>
+                            <li><code>!!</code> - Not-null assertion (use carefully!)</li>
+                            <li><code>?.let { }</code> - Execute block only if not null</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="when-expressions">
+                    <h3>🎯 When Expressions: Smart Switch</h3>
+                    <p>Kotlin's <code>when</code> is like switch on steroids! 💪</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Pattern matching with ranges</span>
+<span class="kotlin-keyword">val</span> windDescription = <span class="kotlin-keyword">when</span> (speed) {
+    <span class="kotlin-keyword">null</span> -> <span class="kotlin-string">"No data"</span>
+    <span class="kotlin-keyword">in</span> <span class="kotlin-string">0.0..5.0</span> -> <span class="kotlin-string">"Calm"</span> <span class="kotlin-comment">// Range check</span>
+    <span class="kotlin-keyword">in</span> <span class="kotlin-string">5.0..15.0</span> -> <span class="kotlin-string">"Light breeze"</span>
+    <span class="kotlin-keyword">in</span> <span class="kotlin-string">15.0..30.0</span> -> <span class="kotlin-string">"Strong breeze"</span>
+    <span class="kotlin-keyword">else</span> -> <span class="kotlin-string">"Gale force!"</span>
+}
+
+<span class="kotlin-comment">// Can also check types, conditions, etc.</span>
+<span class="kotlin-keyword">when</span> {
+    speed == <span class="kotlin-keyword">null</span> -> <span class="kotlin-string">"No wind data"</span>
+    speed > <span class="kotlin-string">50</span> -> <span class="kotlin-string">"Hurricane force!"</span>
+    isValid -> <span class="kotlin-string">"Normal wind"</span>
+    <span class="kotlin-keyword">else</span> -> <span class="kotlin-string">"Invalid reading"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="custom-getters">
+                    <h3>⚙️ Custom Property Getters</h3>
+                    <p>Add computed properties that calculate values on-the-fly!</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Custom getter - computed every time accessed</span>
+<span class="kotlin-keyword">val</span> isValid: <span class="kotlin-type">Boolean</span>
+    <span class="kotlin-keyword">get</span>() = speed != <span class="kotlin-keyword">null</span> && speed > <span class="kotlin-string">0</span>
+
+<span class="kotlin-comment">// Alternative: backing field (computed once)</span>
+<span class="kotlin-keyword">val</span> isValidCached: <span class="kotlin-type">Boolean</span> by <span class="kotlin-keyword">lazy</span> {
+    speed != <span class="kotlin-keyword">null</span> && speed > <span class="kotlin-string">0</span>
+}
+
+<span class="kotlin-comment">// Usage</span>
+<span class="kotlin-keyword">val</span> wind = <span class="kotlin-type">Wind</span>(degree = <span class="kotlin-string">45.0</span>, speed = <span class="kotlin-string">12.5</span>)
+println(wind.isValid) <span class="kotlin-comment">// true</span>
+println(wind.arrow) <span class="kotlin-comment">// "↙"</span></pre>
+                    </div>
+                    <p><strong>Benefits:</strong> Clean API, encapsulation, computed values without storing extra data!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-tools"></i>
+                Data Class Operations
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('data-operations')">
+                <h4><i class="fas fa-play-circle"></i> Master Data Class Functions</h4>
+                <p>Learn copy(), destructuring, and equality operations</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Creating and manipulating data classes</span>
+<span class="kotlin-keyword">val</span> originalWind = <span class="kotlin-type">Wind</span>(
+    degree = <span class="kotlin-string">180.0</span>, 
+    speed = <span class="kotlin-string">15.0</span>, 
+    gusts = <span class="kotlin-string">20.0</span>
+)
+
+<span class="kotlin-comment">// 📄 Copy with modifications</span>
+<span class="kotlin-keyword">val</span> strongerWind = originalWind.copy(speed = <span class="kotlin-string">25.0</span>)
+<span class="kotlin-keyword">val</span> calmWind = originalWind.copy(speed = <span class="kotlin-string">0.0</span>, gusts = <span class="kotlin-keyword">null</span>)
+
+<span class="kotlin-comment">// 🔢 Destructuring assignment</span>
+<span class="kotlin-keyword">val</span> (direction, windSpeed, gustSpeed) = originalWind
+println(<span class="kotlin-string">"Wind: ${windSpeed}mph from ${direction}°"</span>)
+
+<span class="kotlin-comment">// ⚖️ Equality comparison (by values, not reference)</span>
+<span class="kotlin-keyword">val</span> sameWind = <span class="kotlin-type">Wind</span>(<span class="kotlin-string">180.0</span>, <span class="kotlin-string">15.0</span>, <span class="kotlin-string">20.0</span>)
+println(originalWind == sameWind) <span class="kotlin-comment">// true - same values</span>
+println(originalWind === sameWind) <span class="kotlin-comment">// false - different objects</span>
+
+<span class="kotlin-comment">// 📋 String representation</span>
+println(originalWind) <span class="kotlin-comment">// Wind(degree=180.0, speed=15.0, gusts=20.0)</span>
+
+<span class="kotlin-comment">// 🗂️ Use in collections</span>
+<span class="kotlin-keyword">val</span> windReadings = setOf(originalWind, sameWind, strongerWind)
+println(windReadings.size) <span class="kotlin-comment">// 2 (originalWind == sameWind)</span></pre>
+            </div>
+
+            <div
+                style="background: #fffaf0; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #ed8936;">
+                <h4 style="color: #ed8936;"><i class="fas fa-lightbulb"></i> Pro Tips:</h4>
+                <ul style="color: #4a5568; line-height: 1.8;">
+                    <li><strong>copy():</strong> Creates a shallow copy - perfect for immutable updates</li>
+                    <li><strong>Destructuring:</strong> Only works with first few properties (component functions)</li>
+                    <li><strong>Equality:</strong> Based on property values, great for testing and collections</li>
+                    <li><strong>toString():</strong> Automatic debugging-friendly representation</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Practice: Data Class Quiz
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('practice')">
+                <h4><i class="fas fa-play-circle"></i> Test Your Knowledge</h4>
+                <p>Match data class concepts with their benefits</p>
+            </div>
+
+            <div class="quiz-section">
+                <h3><i class="fas fa-brain"></i> Data Class Features Quiz</h3>
+                <p>Drag and match the data class features!</p>
+
+                <div class="drag-drop-area">
+                    <div>
+                        <h4>Features</h4>
+                        <div class="drag-item" draggable="true" data-concept="copy-function">copy()</div>
+                        <div class="drag-item" draggable="true" data-concept="nullable-types">Double?</div>
+                        <div class="drag-item" draggable="true" data-concept="when-expression">when</div>
+                        <div class="drag-item" draggable="true" data-concept="data-keyword">data class</div>
+                    </div>
+                    <div>
+                        <h4>Benefits</h4>
+                        <div class="drop-zone" data-answer="copy-function">
+                            Clone object with optional modifications
+                        </div>
+                        <div class="drop-zone" data-answer="nullable-types">
+                            Safe null handling at compile time
+                        </div>
+                        <div class="drop-zone" data-answer="when-expression">
+                            Smart pattern matching with ranges
+                        </div>
+                        <div class="drop-zone" data-answer="data-keyword">
+                            Auto-generates equals, hashCode, toString
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="checkQuizAnswers(2)">Check My Answers! 🎯</button>
+                <div id="quizResult2"></div>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Chapter 2 Summary</h4>
+                <p><strong>📦 Data Classes:</strong> Smart containers with auto-generated methods</p>
+                <p><strong>🤲 Null Safety:</strong> Compile-time protection from null crashes</p>
+                <p><strong>🎯 When Expressions:</strong> Pattern matching with ranges and conditions</p>
+                <p><strong>📄 Copy Function:</strong> Immutable updates made easy</p>
+                <p><strong>⚙️ Custom Getters:</strong> Computed properties without storage</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+                <button class="btn" onclick="navigateToChapter('chapter1.html')">
+                    <i class="fas fa-arrow-left"></i> Previous: Application Classes
+                </button>
+                <button class="btn" onclick="navigateToChapter('chapter3.html')">
+                    Next: Enum Classes <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Data Class Detective! 🕵️</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let sectionsCompleted = 0;
+        const totalSections = 4;
+
+        function completeSection(sectionName) {
+            if (sectionsCompleted < totalSections) {
+                sectionsCompleted++;
+                updateChapterProgress(2, sectionsCompleted, totalSections);
+                updateProgressBar();
+
+                if (typeof learnConcept === 'function') {
+                    learnConcept('data-classes');
+                }
+
+                if (sectionsCompleted === totalSections) {
+                    showAchievement('Chapter 2 Complete! Data Class Master! 📦');
+                }
+            }
+        }
+
+        function updateProgressBar() {
+            const percentage = (sectionsCompleted / totalSections) * 100;
+            document.getElementById('chapterProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${sectionsCompleted}/${totalSections} sections completed`;
+        }
+
+        // Initialize progress
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProgressBar();
+        });
+    </script>
+</body>
+
+</html>

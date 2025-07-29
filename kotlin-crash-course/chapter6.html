@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Advanced Features - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-rocket"></i> Chapter 6: Advanced Features</h1>
+            <p>Coroutines, flows, sealed classes, and advanced Kotlin patterns</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="chapterProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/6 sections completed</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Welcome to Advanced Kotlin!
+            </h2>
+
+            <p>You've mastered the fundamentals! Now let's explore Kotlin's most powerful features that make it perfect
+                for modern Android development. We'll dive into coroutines for async programming, flows for reactive
+                data, sealed classes for type safety, and other advanced patterns used in production apps like
+                BreezyWeather! 🚀</p>
+
+            <div class="concept-card" onclick="completeSection('advanced-intro')">
+                <h4><i class="fas fa-play-circle"></i> Core Concept: Modern Kotlin Patterns</h4>
+                <p>Discover the advanced features that make Kotlin so powerful</p>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Advanced Kotlin: P.O.W.E.R</h4>
+                <p><strong>P</strong>arallel programming with coroutines</p>
+                <p><strong>O</strong>bservable data with flows</p>
+                <p><strong>W</strong>hen expressions with sealed classes</p>
+                <p><strong>E</strong>xtension everything</p>
+                <p><strong>R</strong>eactive architecture patterns</p>
+            </div>
+
+            <div class="completion-stats">
+                <h3>🎓 What You've Already Mastered:</h3>
+                <div class="skills-grid">
+                    <div class="skill-badge">Application Classes</div>
+                    <div class="skill-badge">Data Classes</div>
+                    <div class="skill-badge">Enum Classes</div>
+                    <div class="skill-badge">Extension Functions</div>
+                    <div class="skill-badge">Interfaces</div>
+                    <div class="skill-badge">Null Safety</div>
+                    <div class="skill-badge">When Expressions</div>
+                    <div class="skill-badge">Property Getters</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-lightning-bolt"></i>
+                Coroutines: Async Made Easy
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('coroutines')">
+                <h4><i class="fas fa-play-circle"></i> Master Kotlin Coroutines</h4>
+                <p>Learn async programming that doesn't block your UI</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('coroutine-basics')">What are Coroutines?</button>
+                    <button class="tab-btn" onclick="switchTab('suspend-functions')">Suspend Functions</button>
+                    <button class="tab-btn" onclick="switchTab('real-examples')">Real Examples</button>
+                </div>
+
+                <div class="tab-content active" id="coroutine-basics">
+                    <h3>⚡ What are Coroutines?</h3>
+                    <p>Coroutines are like lightweight threads that don't block your UI. Think of them as "pausable
+                        functions" that can suspend and resume without freezing your app!</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="background: #fed7d7; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #e53e3e;">❌ Traditional Threading</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-comment">// Blocking UI thread - BAD!</span>
+<span class="kotlin-keyword">fun</span> loadWeather() {
+    <span class="kotlin-keyword">val</span> data = networkCall() <span class="kotlin-comment">// UI freezes! 😱</span>
+    updateUI(data)
+}</pre>
+                            </div>
+                            <ul style="color: #e53e3e; font-size: 0.9em;">
+                                <li>UI freezes during network calls</li>
+                                <li>Complex callback hell</li>
+                                <li>Hard to handle errors</li>
+                                <li>Memory leaks with threads</li>
+                            </ul>
+                        </div>
+                        <div style="background: #e6fffa; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #38a169;">✅ Coroutines</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-comment">// Non-blocking - AWESOME!</span>
+<span class="kotlin-keyword">suspend fun</span> loadWeather() {
+    <span class="kotlin-keyword">val</span> data = networkCall() <span class="kotlin-comment">// Suspends, doesn't block! ✨</span>
+    updateUI(data)
+}</pre>
+                            </div>
+                            <ul style="color: #38a169; font-size: 0.9em;">
+                                <li>UI stays responsive</li>
+                                <li>Sequential-looking code</li>
+                                <li>Built-in error handling</li>
+                                <li>Automatic lifecycle management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="suspend-functions">
+                    <h3>⏸️ Suspend Functions</h3>
+                    <p>Suspend functions are the building blocks of coroutines. They can pause execution without
+                        blocking threads!</p>
+
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Suspend function for network calls</span>
+<span class="kotlin-keyword">suspend fun</span> fetchWeatherData(location: <span class="kotlin-type">Location</span>): <span class="kotlin-type">WeatherData</span> {
+    <span class="kotlin-comment">// This suspends (pauses) instead of blocking</span>
+    <span class="kotlin-keyword">return</span> weatherApi.getCurrentWeather(location)
+}
+
+<span class="kotlin-comment">// Suspend function for database operations</span>
+<span class="kotlin-keyword">suspend fun</span> saveWeatherData(data: <span class="kotlin-type">WeatherData</span>) {
+    <span class="kotlin-comment">// Database operations can also suspend</span>
+    database.insert(data)
+}
+
+<span class="kotlin-comment">// Combining suspend functions</span>
+<span class="kotlin-keyword">suspend fun</span> refreshWeather(location: <span class="kotlin-type">Location</span>) {
+    <span class="kotlin-keyword">try</span> {
+        <span class="kotlin-keyword">val</span> data = fetchWeatherData(location) <span class="kotlin-comment">// Suspend point 1</span>
+        saveWeatherData(data)                  <span class="kotlin-comment">// Suspend point 2</span>
+        notifyUI(data)
+    } <span class="kotlin-keyword">catch</span> (e: <span class="kotlin-type">Exception</span>) {
+        handleError(e)
+    }
+}</pre>
+                    </div>
+
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p style="color: #38a169; margin: 0;"><strong>🎯 Key Point:</strong> Suspend functions can only
+                            be called from other suspend functions or from coroutines!</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="real-examples">
+                    <h3>🌦️ Real Weather App Examples</h3>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// In a ViewModel</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">WeatherViewModel</span> : <span class="kotlin-type">ViewModel</span>() {
+    
+    <span class="kotlin-keyword">fun</span> refreshWeather() {
+        viewModelScope.launch { <span class="kotlin-comment">// Launch coroutine</span>
+            _isLoading.value = <span class="kotlin-keyword">true</span>
+            
+            <span class="kotlin-keyword">try</span> {
+                <span class="kotlin-comment">// Multiple async operations</span>
+                <span class="kotlin-keyword">val</span> current = async { getCurrentWeather() }
+                <span class="kotlin-keyword">val</span> forecast = async { getForecast() }
+                
+                <span class="kotlin-comment">// Wait for both to complete</span>
+                _weatherData.value = <span class="kotlin-type">WeatherState</span>(
+                    current = current.await(),
+                    forecast = forecast.await()
+                )
+            } <span class="kotlin-keyword">catch</span> (e: <span class="kotlin-type">Exception</span>) {
+                _error.value = e.message
+            } <span class="kotlin-keyword">finally</span> {
+                _isLoading.value = <span class="kotlin-keyword">false</span>
+            }
+        }
+    }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-stream"></i>
+                Flow: Reactive Data Streams
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('flows')">
+                <h4><i class="fas fa-play-circle"></i> Master Kotlin Flow</h4>
+                <p>Learn reactive programming for real-time UI updates</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Flow for observing weather data changes</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">WeatherRepository</span> {
+    
+    <span class="kotlin-comment">// 🌊 Flow emits values over time</span>
+    <span class="kotlin-keyword">fun</span> observeWeatherUpdates(): <span class="kotlin-type">Flow&lt;WeatherData&gt;</span> = flow {
+        <span class="kotlin-keyword">while</span> (<span class="kotlin-keyword">true</span>) {
+            <span class="kotlin-keyword">val</span> latest = fetchLatestWeather()
+            emit(latest) <span class="kotlin-comment">// Emit new data</span>
+            delay(<span class="kotlin-string">60_000</span>) <span class="kotlin-comment">// Wait 1 minute</span>
+        }
+    }
+    
+    <span class="kotlin-comment">// 🔄 Transform data with operators</span>
+    <span class="kotlin-keyword">fun</span> getTemperatureUpdates(): <span class="kotlin-type">Flow&lt;String&gt;</span> = 
+        observeWeatherUpdates()
+            .map { <span class="kotlin-string">"${it.temperature}°C"</span> }        <span class="kotlin-comment">// Transform data</span>
+            .distinctUntilChanged()             <span class="kotlin-comment">// Only emit if changed</span>
+            .flowOn(<span class="kotlin-type">Dispatchers</span>.IO)             <span class="kotlin-comment">// Run on background thread</span>
+}
+
+<span class="kotlin-comment">// In UI</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">WeatherActivity</span> : <span class="kotlin-type">AppCompatActivity</span>() {
+    <span class="kotlin-keyword">override fun</span> onCreate(savedInstanceState: <span class="kotlin-type">Bundle</span>?) {
+        <span class="kotlin-keyword">super</span>.onCreate(savedInstanceState)
+        
+        <span class="kotlin-comment">// 📱 Collect flow in UI</span>
+        lifecycleScope.launch {
+            repository.getTemperatureUpdates()
+                .collect { temperature ->
+                    temperatureText.text = temperature <span class="kotlin-comment">// Auto-updates UI!</span>
+                }
+        }
+    }
+}</pre>
+            </div>
+
+            <div style="background: #fffaf0; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #ed8936;"><i class="fas fa-lightbulb"></i> Flow Operators</h4>
+                <ul style="color: #4a5568; line-height: 1.8;">
+                    <li><strong>map:</strong> Transform each value</li>
+                    <li><strong>filter:</strong> Only emit values that match condition</li>
+                    <li><strong>distinctUntilChanged:</strong> Skip duplicate consecutive values</li>
+                    <li><strong>debounce:</strong> Wait for pause in emissions</li>
+                    <li><strong>combine:</strong> Combine multiple flows</li>
+                    <li><strong>catch:</strong> Handle errors gracefully</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-shield-alt"></i>
+                Sealed Classes: Type-Safe States
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('sealed-classes')">
+                <h4><i class="fas fa-play-circle"></i> Master Sealed Classes</h4>
+                <p>Perfect for representing states and results</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Sealed class for UI states - perfect for weather app!</span>
+<span class="kotlin-keyword">sealed class</span> <span class="kotlin-type">WeatherUiState</span> {
+    <span class="kotlin-keyword">object</span> <span class="kotlin-type">Loading</span> : <span class="kotlin-type">WeatherUiState</span>()
+    
+    <span class="kotlin-keyword">data class</span> <span class="kotlin-type">Success</span>(
+        <span class="kotlin-keyword">val</span> weather: <span class="kotlin-type">WeatherData</span>,
+        <span class="kotlin-keyword">val</span> lastUpdated: <span class="kotlin-type">Date</span>
+    ) : <span class="kotlin-type">WeatherUiState</span>()
+    
+    <span class="kotlin-keyword">data class</span> <span class="kotlin-type">Error</span>(
+        <span class="kotlin-keyword">val</span> message: <span class="kotlin-type">String</span>,
+        <span class="kotlin-keyword">val</span> canRetry: <span class="kotlin-type">Boolean</span> = <span class="kotlin-keyword">true</span>
+    ) : <span class="kotlin-type">WeatherUiState</span>()
+    
+    <span class="kotlin-keyword">object</span> <span class="kotlin-type">Empty</span> : <span class="kotlin-type">WeatherUiState</span>()
+}
+
+<span class="kotlin-comment">// Exhaustive when expression - compiler ensures all cases handled!</span>
+<span class="kotlin-keyword">fun</span> updateUI(state: <span class="kotlin-type">WeatherUiState</span>) {
+    <span class="kotlin-keyword">when</span> (state) {
+        <span class="kotlin-keyword">is</span> <span class="kotlin-type">WeatherUiState</span>.Loading -> {
+            progressBar.isVisible = <span class="kotlin-keyword">true</span>
+            errorLayout.isVisible = <span class="kotlin-keyword">false</span>
+        }
+        <span class="kotlin-keyword">is</span> <span class="kotlin-type">WeatherUiState</span>.Success -> {
+            progressBar.isVisible = <span class="kotlin-keyword">false</span>
+            displayWeather(state.weather)
+            lastUpdatedText.text = <span class="kotlin-string">"Updated: ${state.lastUpdated}"</span>
+        }
+        <span class="kotlin-keyword">is</span> <span class="kotlin-type">WeatherUiState</span>.Error -> {
+            progressBar.isVisible = <span class="kotlin-keyword">false</span>
+            errorText.text = state.message
+            retryButton.isVisible = state.canRetry
+        }
+        <span class="kotlin-keyword">is</span> <span class="kotlin-type">WeatherUiState</span>.Empty -> {
+            showEmptyState()
+        }
+        <span class="kotlin-comment">// No else needed - compiler knows all cases are covered! 🛡️</span>
+    }
+}</pre>
+            </div>
+
+            <div style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #38a169;">🎯 Sealed Class Benefits:</h4>
+                <ul style="color: #4a5568; line-height: 1.8;">
+                    <li><strong>Type Safety:</strong> Compiler ensures exhaustive when expressions</li>
+                    <li><strong>Clear States:</strong> All possible states are explicitly defined</li>
+                    <li><strong>Data Classes:</strong> Can carry associated data with each state</li>
+                    <li><strong>Refactoring:</strong> Adding new states causes compile errors until handled</li>
+                    <li><strong>No Null:</strong> Better than nullable booleans for state management</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-arrows-alt"></i>
+                Higher-Order Functions
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('higher-order')">
+                <h4><i class="fas fa-play-circle"></i> Functions as Parameters</h4>
+                <p>Pass functions as arguments for flexible APIs</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Higher-order functions in weather app</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">List&lt;WeatherData&gt;</span>.filterByCondition(
+    predicate: (WeatherData) -> <span class="kotlin-type">Boolean</span>  <span class="kotlin-comment">// Function parameter!</span>
+): <span class="kotlin-type">List&lt;WeatherData&gt;</span> = <span class="kotlin-keyword">this</span>.filter(predicate)
+
+<span class="kotlin-comment">// Usage examples</span>
+<span class="kotlin-keyword">val</span> sunnyDays = weatherHistory.filterByCondition { it.isSunny() }
+<span class="kotlin-keyword">val</span> hotDays = weatherHistory.filterByCondition { it.temperature > <span class="kotlin-string">30</span> }
+<span class="kotlin-keyword">val</span> recentDays = weatherHistory.filterByCondition { 
+    it.date.isAfter(<span class="kotlin-type">Date</span>().minusDays(<span class="kotlin-string">7</span>)) 
+}
+
+<span class="kotlin-comment">// Function that returns a function!</span>
+<span class="kotlin-keyword">fun</span> createTemperatureFilter(minTemp: <span class="kotlin-type">Double</span>): (WeatherData) -> <span class="kotlin-type">Boolean</span> {
+    <span class="kotlin-keyword">return</span> { weather -> weather.temperature >= minTemp }
+}
+
+<span class="kotlin-keyword">val</span> warmDayFilter = createTemperatureFilter(<span class="kotlin-string">20.0</span>)
+<span class="kotlin-keyword">val</span> warmDays = weatherHistory.filterByCondition(warmDayFilter)
+
+<span class="kotlin-comment">// Kotlin collection functions are higher-order functions!</span>
+<span class="kotlin-keyword">val</span> temperatures = weatherData
+    .map { it.temperature }              <span class="kotlin-comment">// Transform each item</span>
+    .filter { it > <span class="kotlin-string">0</span> }                  <span class="kotlin-comment">// Keep only positive</span>
+    .sortedDescending()                  <span class="kotlin-comment">// Sort high to low</span>
+    .take(<span class="kotlin-string">5</span>)                           <span class="kotlin-comment">// Take first 5</span></pre>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-dna"></i>
+                Scope Functions
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('scope-functions')">
+                <h4><i class="fas fa-play-circle"></i> Master let, run, with, also, apply</h4>
+                <p>Kotlin's scope functions for cleaner code</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Scope functions in weather app</span>
+
+<span class="kotlin-comment">// 🔧 apply - configure object and return it</span>
+<span class="kotlin-keyword">val</span> weatherView = <span class="kotlin-type">WeatherCardView</span>(context).apply {
+    setTemperature(<span class="kotlin-string">25.0</span>)
+    setCondition(<span class="kotlin-string">"Sunny"</span>)
+    setLocation(<span class="kotlin-string">"New York"</span>)
+    isVisible = <span class="kotlin-keyword">true</span>
+}
+
+<span class="kotlin-comment">// 📋 let - transform non-null values</span>
+weatherData?.let { data ->
+    updateTemperature(data.temperature)
+    updateHumidity(data.humidity)
+    updateWindSpeed(data.windSpeed)
+}
+
+<span class="kotlin-comment">// 🔄 run - execute block and return result</span>
+<span class="kotlin-keyword">val</span> temperatureText = weatherData?.run {
+    <span class="kotlin-keyword">when</span> {
+        temperature > <span class="kotlin-string">30</span> -> <span class="kotlin-string">"Hot: ${temperature}°C"</span>
+        temperature > <span class="kotlin-string">20</span> -> <span class="kotlin-string">"Warm: ${temperature}°C"</span>
+        temperature > <span class="kotlin-string">0</span> -> <span class="kotlin-string">"Cool: ${temperature}°C"</span>
+        <span class="kotlin-keyword">else</span> -> <span class="kotlin-string">"Cold: ${temperature}°C"</span>
+    }
+}
+
+<span class="kotlin-comment">// 🏃‍♂️ with - operate on object without null check</span>
+<span class="kotlin-keyword">with</span>(binding.weatherCard) {
+    temperatureText.text = <span class="kotlin-string">"${weather.temperature}°"</span>
+    conditionText.text = weather.condition
+    humidityText.text = <span class="kotlin-string">"${weather.humidity}%"</span>
+    isVisible = <span class="kotlin-keyword">true</span>
+}
+
+<span class="kotlin-comment">// ➕ also - perform side effects and return original</span>
+<span class="kotlin-keyword">val</span> savedWeather = weather
+    .also { println(<span class="kotlin-string">"Saving weather: $it"</span>) }
+    .also { database.save(it) }
+    .also { notifyObservers(it) }</pre>
+            </div>
+
+            <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #4299e1;">🧠 Scope Function Cheat Sheet:</h4>
+                <ul style="color: #4a5568; line-height: 1.8;">
+                    <li><strong>apply:</strong> Configure object, return object (this)</li>
+                    <li><strong>let:</strong> Transform object, return result (it)</li>
+                    <li><strong>run:</strong> Execute code block, return result (this)</li>
+                    <li><strong>with:</strong> Operate on object, return result (this)</li>
+                    <li><strong>also:</strong> Side effects, return original object (it)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-trophy"></i>
+                Congratulations! Course Complete!
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('course-complete')">
+                <h4><i class="fas fa-play-circle"></i> You Did It! 🎉</h4>
+                <p>You've mastered Kotlin fundamentals and advanced features!</p>
+            </div>
+
+            <div class="completion-stats">
+                <h3>🎓 Your Kotlin Superpowers:</h3>
+                <div class="skills-grid">
+                    <div class="skill-badge">📱 Application Classes</div>
+                    <div class="skill-badge">📦 Data Classes</div>
+                    <div class="skill-badge">🏷️ Enum Classes</div>
+                    <div class="skill-badge">🪄 Extension Functions</div>
+                    <div class="skill-badge">🔧 Interfaces</div>
+                    <div class="skill-badge">⚡ Coroutines</div>
+                    <div class="skill-badge">🌊 Flow</div>
+                    <div class="skill-badge">🛡️ Sealed Classes</div>
+                    <div class="skill-badge">🎯 Higher-Order Functions</div>
+                    <div class="skill-badge">🔧 Scope Functions</div>
+                    <div class="skill-badge">🤲 Null Safety</div>
+                    <div class="skill-badge">🎯 When Expressions</div>
+                </div>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Your Kotlin Journey Summary</h4>
+                <p><strong>📱 Application Classes:</strong> App entry points with dependency injection</p>
+                <p><strong>📦 Data Classes:</strong> Smart containers with auto-generated methods</p>
+                <p><strong>🏷️ Enum Classes:</strong> Type-safe constants with superpowers</p>
+                <p><strong>🪄 Extension Functions:</strong> Add methods to existing classes</p>
+                <p><strong>🔧 Interfaces:</strong> Contracts for clean architecture</p>
+                <p><strong>⚡ Coroutines:</strong> Non-blocking async programming</p>
+                <p><strong>🌊 Flow:</strong> Reactive data streams</p>
+                <p><strong>🛡️ Sealed Classes:</strong> Type-safe state management</p>
+                <p><strong>🎯 Advanced Patterns:</strong> Higher-order functions and scope functions</p>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <h2 style="color: #38a169;">🎉 Ready to Build Amazing Android Apps! 🎉</h2>
+                <p style="font-size: 1.2em; color: #4a5568; margin: 20px 0;">
+                    You now have the knowledge to understand and contribute to the BreezyWeather codebase,
+                    and build your own modern Android applications with confidence!
+                </p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+                <button class="btn" onclick="navigateToChapter('chapter5.html')">
+                    <i class="fas fa-arrow-left"></i> Previous: Interfaces
+                </button>
+                <button class="btn completion-btn" onclick="navigateToChapter('quiz.html')">
+                    <i class="fas fa-brain"></i> Test All Your Knowledge!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Kotlin Master! 🏆</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let sectionsCompleted = 0;
+        const totalSections = 6;
+
+        function completeSection(sectionName) {
+            if (sectionsCompleted < totalSections) {
+                sectionsCompleted++;
+                updateChapterProgress(6, sectionsCompleted, totalSections);
+                updateProgressBar();
+
+                if (typeof learnConcept === 'function') {
+                    learnConcept('advanced');
+                }
+
+                if (sectionsCompleted === totalSections) {
+                    showAchievement('🎉 COURSE COMPLETE! You are now a Kotlin Master! 🏆');
+
+                    // Special confetti for course completion
+                    setTimeout(() => {
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                if (typeof createConfetti === 'function') {
+                                    createConfetti();
+                                }
+                            }, i * 300);
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function updateProgressBar() {
+            const percentage = (sectionsCompleted / totalSections) * 100;
+            document.getElementById('chapterProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${sectionsCompleted}/${totalSections} sections completed`;
+        }
+
+        // Initialize progress
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProgressBar();
+        });
+    </script>
+</body>
+
+</html>

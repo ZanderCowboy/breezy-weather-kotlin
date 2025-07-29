@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Interfaces & Abstractions - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cogs"></i> Chapter 5: Interfaces & Abstractions</h1>
+            <p>Clean architecture with interfaces, coroutines, and generics</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="chapterProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/4 sections completed</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                What are Interfaces?
+            </h2>
+
+            <p>Interfaces are like contracts or blueprints in Kotlin. They define what a class should do without
+                specifying how it should do it. Think of them as a promise: "If you implement me, you must provide these
+                functions!" Perfect for creating flexible, testable, and maintainable code. 🤝</p>
+
+            <div class="concept-card" onclick="completeSection('interface-basics')">
+                <h4><i class="fas fa-play-circle"></i> Core Concept: Contracts & Abstractions</h4>
+                <p>Learn how interfaces create flexible and testable code</p>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-handshake"></i> Interface Memory: C.O.N.T.R.A.C.T</h4>
+                <p><strong>C</strong>ontract definition - what must be implemented</p>
+                <p><strong>O</strong>bligatory implementation - must provide all methods</p>
+                <p><strong>N</strong>o concrete implementation - just signatures</p>
+                <p><strong>T</strong>estability improvement - easy to mock</p>
+                <p><strong>R</strong>eusable across classes - multiple implementations</p>
+                <p><strong>A</strong>bstraction layer - hide implementation details</p>
+                <p><strong>C</strong>lean code principle - separation of concerns</p>
+                <p><strong>T</strong>ype safety - compiler enforced contracts</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('why-interfaces')">Why Interfaces?</button>
+                    <button class="tab-btn" onclick="switchTab('vs-classes')">vs Abstract Classes</button>
+                    <button class="tab-btn" onclick="switchTab('benefits')">Benefits</button>
+                </div>
+
+                <div class="tab-content active" id="why-interfaces">
+                    <h3>🤔 Why Use Interfaces?</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: #4299e1;">🎯 Real-World Analogy:</h4>
+                        <p style="color: #4a5568; line-height: 1.8;">Think of a <strong>USB port</strong> on your
+                            computer. It's an interface that says: "Any device that implements USB can plug into me."
+                            Your mouse, keyboard, phone charger - they all implement the USB "interface" differently,
+                            but they all work with the same port!</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #e6fffa; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #38a169;">✅ With Interfaces</h4>
+                            <ul style="color: #4a5568; line-height: 1.8;">
+                                <li>Flexible implementations</li>
+                                <li>Easy to test with mocks</li>
+                                <li>Loose coupling</li>
+                                <li>Multiple inheritance possible</li>
+                                <li>Clear contracts</li>
+                            </ul>
+                        </div>
+                        <div style="background: #fed7d7; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #e53e3e;">❌ Without Interfaces</h4>
+                            <ul style="color: #4a5568; line-height: 1.8;">
+                                <li>Tight coupling to concrete classes</li>
+                                <li>Hard to test</li>
+                                <li>Difficult to change implementations</li>
+                                <li>Less flexible architecture</li>
+                                <li>Harder to maintain</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="vs-classes">
+                    <h3>⚖️ Interface vs Abstract Class</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="background: #e6fffa; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #38a169;">🔗 Interface</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-keyword">interface</span> <span class="kotlin-type">Drawable</span> {
+    <span class="kotlin-keyword">fun</span> draw()
+    <span class="kotlin-keyword">fun</span> getArea(): <span class="kotlin-type">Double</span>
+    
+    <span class="kotlin-comment">// Can have default implementation</span>
+    <span class="kotlin-keyword">fun</span> describe() = <span class="kotlin-string">"Shape"</span>
+}</pre>
+                            </div>
+                            <ul style="color: #4a5568; font-size: 0.9em;">
+                                <li>Only abstract by default</li>
+                                <li>Multiple inheritance</li>
+                                <li>No constructor</li>
+                                <li>Can have default methods</li>
+                            </ul>
+                        </div>
+                        <div style="background: #fff3cd; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #ed8936;">🏗️ Abstract Class</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-keyword">abstract class</span> <span class="kotlin-type">Shape</span> {
+    <span class="kotlin-keyword">abstract fun</span> draw()
+    <span class="kotlin-keyword">var</span> color: <span class="kotlin-type">String</span> = <span class="kotlin-string">"blue"</span>
+    
+    <span class="kotlin-comment">// Concrete implementation</span>
+    <span class="kotlin-keyword">fun</span> move() { <span class="kotlin-comment">/*...*/</span> }
+}</pre>
+                            </div>
+                            <ul style="color: #4a5568; font-size: 0.9em;">
+                                <li>Can mix abstract/concrete</li>
+                                <li>Single inheritance only</li>
+                                <li>Can have constructor</li>
+                                <li>Can store state</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p style="color: #38a169; margin: 0;"><strong>💡 Rule of Thumb:</strong> Use interfaces for "can
+                            do" relationships (Flyable, Drawable) and abstract classes for "is a" relationships (Animal,
+                            Vehicle).</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="benefits">
+                    <h3>✨ Benefits of Interfaces</h3>
+                    <div
+                        style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #38a169;">
+                        <h4 style="color: #38a169;">🚀 Architecture Benefits:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Dependency Inversion:</strong> Depend on abstractions, not concretions</li>
+                            <li><strong>Open/Closed Principle:</strong> Open for extension, closed for modification</li>
+                            <li><strong>Single Responsibility:</strong> Each interface has one clear purpose</li>
+                            <li><strong>Interface Segregation:</strong> Many specific interfaces > one general</li>
+                        </ul>
+                    </div>
+                    <div
+                        style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #ed8936;">
+                        <h4 style="color: #ed8936;">🧪 Testing Benefits:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Mockability:</strong> Easy to create test doubles</li>
+                            <li><strong>Isolation:</strong> Test classes in isolation</li>
+                            <li><strong>Fast Tests:</strong> No need for real implementations</li>
+                            <li><strong>Reliability:</strong> Consistent test behavior</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-database"></i>
+                Real Code: Database Interface
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('database-interface')">
+                <h4><i class="fas fa-play-circle"></i> Explore Database Abstractions</h4>
+                <p>See how BreezyWeather uses interfaces for clean database access</p>
+            </div>
+
+            <div class="file-explore-card">
+                <h4><i class="fas fa-folder-open"></i> Interface Files to Explore:</h4>
+                <ul>
+                    <li><code>data/src/main/java/breezyweather/data/DatabaseHandler.kt</code> - Database interface</li>
+                    <li><code>data/src/main/java/breezyweather/data/AndroidDatabaseHandler.kt</code> - Implementation
+                    </li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// From DatabaseHandler.kt - Clean database abstraction</span>
+<span class="kotlin-keyword">interface</span> <span class="kotlin-type">DatabaseHandler</span> {
+
+    <span class="kotlin-comment">// 🚀 Suspend function for coroutines - async database operations</span>
+    <span class="kotlin-keyword">suspend fun</span> &lt;<span class="kotlin-type">T</span>&gt; await(
+        inTransaction: <span class="kotlin-type">Boolean</span> = <span class="kotlin-keyword">false</span>, 
+        block: <span class="kotlin-keyword">suspend</span> <span class="kotlin-type">Database</span>.() -> <span class="kotlin-type">T</span>
+    ): <span class="kotlin-type">T</span>
+
+    <span class="kotlin-comment">// 📋 Suspending list operations with generics</span>
+    <span class="kotlin-keyword">suspend fun</span> &lt;<span class="kotlin-type">T</span> : <span class="kotlin-type">Any</span>&gt; awaitList(
+        inTransaction: <span class="kotlin-type">Boolean</span> = <span class="kotlin-keyword">false</span>,
+        block: <span class="kotlin-keyword">suspend</span> <span class="kotlin-type">Database</span>.() -> <span class="kotlin-type">Query&lt;T&gt;</span>,
+    ): <span class="kotlin-type">List&lt;T&gt;</span>
+
+    <span class="kotlin-comment">// 🌊 Reactive streams with Flow - real-time data updates</span>
+    <span class="kotlin-keyword">fun</span> &lt;<span class="kotlin-type">T</span> : <span class="kotlin-type">Any</span>&gt; subscribeToList(
+        block: <span class="kotlin-type">Database</span>.() -> <span class="kotlin-type">Query&lt;T&gt;</span>
+    ): <span class="kotlin-type">Flow&lt;List&lt;T&gt;&gt;</span>
+
+    <span class="kotlin-comment">// 💾 Single item operations</span>
+    <span class="kotlin-keyword">suspend fun</span> &lt;<span class="kotlin-type">T</span> : <span class="kotlin-type">Any</span>&gt; awaitOne(
+        block: <span class="kotlin-keyword">suspend</span> <span class="kotlin-type">Database</span>.() -> <span class="kotlin-type">Query&lt;T&gt;</span>,
+    ): <span class="kotlin-type">T?</span>
+
+    <span class="kotlin-comment">// 🌊 Reactive single item subscription</span>
+    <span class="kotlin-keyword">fun</span> &lt;<span class="kotlin-type">T</span> : <span class="kotlin-type">Any</span>&gt; subscribeToOne(
+        block: <span class="kotlin-type">Database</span>.() -> <span class="kotlin-type">Query&lt;T&gt;</span>
+    ): <span class="kotlin-type">Flow&lt;T?&gt;</span>
+}</pre>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('advanced-features')">Advanced Features</button>
+                    <button class="tab-btn" onclick="switchTab('generics-deep-dive')">Generics Deep Dive</button>
+                    <button class="tab-btn" onclick="switchTab('coroutines-flow')">Coroutines & Flow</button>
+                </div>
+
+                <div class="tab-content active" id="advanced-features">
+                    <h3>🚀 Advanced Kotlin Features</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><code>suspend fun</code> - ⚡ Coroutine functions for async operations</li>
+                            <li><code>&lt;T&gt;</code> - 🧬 Generic type parameters (works with any type)</li>
+                            <li><code>T : Any</code> - 🛡️ Type constraints (T must be non-null)</li>
+                            <li><code>Flow&lt;List&lt;T&gt;&gt;</code> - 🌊 Reactive streams for real-time data</li>
+                            <li><code>Database.() -> T</code> - 🎯 Extension function types</li>
+                            <li><code>inTransaction: Boolean = false</code> - 🔧 Default parameters</li>
+                        </ul>
+                    </div>
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p style="color: #38a169; margin: 0;"><strong>🎯 Pro Tip:</strong> This interface combines
+                            multiple advanced Kotlin features to create a powerful, type-safe, and async database API!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="generics-deep-dive">
+                    <h3>🧬 Generics Explained</h3>
+                    <p>Generics allow you to write code that works with any type while maintaining type safety:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Generic function breakdown</span>
+<span class="kotlin-keyword">suspend fun</span> &lt;<span style="background: #ffd700; color: #333; padding: 2px;">T : Any</span>&gt; awaitList(
+    inTransaction: <span class="kotlin-type">Boolean</span> = <span class="kotlin-keyword">false</span>,
+    block: <span class="kotlin-keyword">suspend</span> <span class="kotlin-type">Database</span>.() -> <span class="kotlin-type">Query&lt;T&gt;</span>,
+): <span class="kotlin-type">List&lt;T&gt;</span>
+
+<span class="kotlin-comment">// Usage examples - same function, different types!</span>
+<span class="kotlin-keyword">val</span> locations: <span class="kotlin-type">List&lt;Location&gt;</span> = db.awaitList { 
+    locationQueries.selectAll() 
+}
+
+<span class="kotlin-keyword">val</span> weatherData: <span class="kotlin-type">List&lt;WeatherEntity&gt;</span> = db.awaitList { 
+    weatherQueries.selectAll() 
+}</pre>
+                    </div>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #4299e1;">🔍 Generic Constraints:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><code>T : Any</code> - T must be non-null</li>
+                            <li><code>T : Comparable&lt;T&gt;</code> - T must be comparable</li>
+                            <li><code>T : Serializable</code> - T must be serializable</li>
+                            <li><code>T : WeatherData</code> - T must extend WeatherData</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="coroutines-flow">
+                    <h3>🌊 Coroutines & Flow</h3>
+                    <p>Modern asynchronous programming in Kotlin:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Suspend functions for async operations</span>
+<span class="kotlin-keyword">suspend fun</span> loadWeatherData(): <span class="kotlin-type">WeatherData</span> {
+    <span class="kotlin-keyword">return</span> databaseHandler.awaitOne {
+        weatherQueries.getLatest()
+    } ?: <span class="kotlin-type">WeatherData</span>.empty()
+}
+
+<span class="kotlin-comment">// Flow for reactive data streams</span>
+<span class="kotlin-keyword">fun</span> observeWeatherData(): <span class="kotlin-type">Flow&lt;WeatherData?&gt;</span> {
+    <span class="kotlin-keyword">return</span> databaseHandler.subscribeToOne {
+        weatherQueries.getLatest()
+    }
+}
+
+<span class="kotlin-comment">// Usage in UI</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">WeatherViewModel</span> {
+    <span class="kotlin-keyword">val</span> weatherData = observeWeatherData()
+        .stateIn(viewModelScope, SharingStarted.Lazily, <span class="kotlin-keyword">null</span>)
+}</pre>
+                    </div>
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="color: #38a169;">🎯 Benefits:</h4>
+                        <ul style="color: #4a5568;">
+                            <li><strong>Non-blocking:</strong> UI stays responsive</li>
+                            <li><strong>Reactive:</strong> UI updates automatically when data changes</li>
+                            <li><strong>Efficient:</strong> Only updates when necessary</li>
+                            <li><strong>Lifecycle-aware:</strong> Handles Android lifecycle automatically</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-tools"></i>
+                Implementing Interfaces
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('implementation')">
+                <h4><i class="fas fa-play-circle"></i> Create Interface Implementations</h4>
+                <p>Learn how to implement and use interfaces effectively</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Weather data source interface</span>
+<span class="kotlin-keyword">interface</span> <span class="kotlin-type">WeatherDataSource</span> {
+    <span class="kotlin-keyword">suspend fun</span> getCurrentWeather(location: <span class="kotlin-type">Location</span>): <span class="kotlin-type">WeatherData?</span>
+    <span class="kotlin-keyword">suspend fun</span> getForecast(location: <span class="kotlin-type">Location</span>): <span class="kotlin-type">List&lt;ForecastData&gt;</span>
+    
+    <span class="kotlin-comment">// Default implementation - can be overridden</span>
+    <span class="kotlin-keyword">fun</span> getSourceName(): <span class="kotlin-type">String</span> = <span class="kotlin-string">"Unknown Source"</span>
+}
+
+<span class="kotlin-comment">// OpenWeatherMap implementation</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">OpenWeatherMapSource</span> : <span class="kotlin-type">WeatherDataSource</span> {
+    <span class="kotlin-keyword">override suspend fun</span> getCurrentWeather(location: <span class="kotlin-type">Location</span>): <span class="kotlin-type">WeatherData?</span> {
+        <span class="kotlin-comment">// API call implementation</span>
+        <span class="kotlin-keyword">return</span> api.getCurrentWeather(location.latitude, location.longitude)
+            .toWeatherData()
+    }
+    
+    <span class="kotlin-keyword">override suspend fun</span> getForecast(location: <span class="kotlin-type">Location</span>): <span class="kotlin-type">List&lt;ForecastData&gt;</span> {
+        <span class="kotlin-comment">// Forecast API implementation</span>
+        <span class="kotlin-keyword">return</span> api.getForecast(location.latitude, location.longitude)
+            .map { it.toForecastData() }
+    }
+    
+    <span class="kotlin-keyword">override fun</span> getSourceName() = <span class="kotlin-string">"OpenWeatherMap"</span>
+}
+
+<span class="kotlin-comment">// Alternative implementation for testing</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">MockWeatherSource</span> : <span class="kotlin-type">WeatherDataSource</span> {
+    <span class="kotlin-keyword">override suspend fun</span> getCurrentWeather(location: <span class="kotlin-type">Location</span>) = 
+        <span class="kotlin-type">WeatherData</span>(temperature = <span class="kotlin-string">25.0</span>, description = <span class="kotlin-string">"Sunny"</span>)
+        
+    <span class="kotlin-keyword">override suspend fun</span> getForecast(location: <span class="kotlin-type">Location</span>) = 
+        emptyList&lt;<span class="kotlin-type">ForecastData</span>&gt;()
+        
+    <span class="kotlin-keyword">override fun</span> getSourceName() = <span class="kotlin-string">"Mock Source"</span>
+}</pre>
+            </div>
+
+            <div style="background: #fffaf0; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #ed8936;"><i class="fas fa-lightbulb"></i> Interface Best Practices</h4>
+                <ul style="color: #4a5568; line-height: 1.8;">
+                    <li><strong>Single Responsibility:</strong> Each interface should have one clear purpose</li>
+                    <li><strong>Cohesive Methods:</strong> All methods should be related to the interface's purpose</li>
+                    <li><strong>Default Implementations:</strong> Provide sensible defaults when possible</li>
+                    <li><strong>Naming Convention:</strong> Use descriptive names ending in -able, -er, or describing
+                        capability</li>
+                    <li><strong>Dependency Injection:</strong> Use interfaces with DI for flexible architecture</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Practice: Interface Quiz
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('practice')">
+                <h4><i class="fas fa-play-circle"></i> Test Your Interface Knowledge</h4>
+                <p>Match interface concepts with their benefits</p>
+            </div>
+
+            <div class="quiz-section">
+                <h3><i class="fas fa-brain"></i> Interfaces & Abstractions Quiz</h3>
+                <p>Drag and match the advanced concepts!</p>
+
+                <div class="drag-drop-area">
+                    <div>
+                        <h4>Concepts</h4>
+                        <div class="drag-item" draggable="true" data-concept="suspend-fun">suspend fun</div>
+                        <div class="drag-item" draggable="true" data-concept="generics">T : Any</div>
+                        <div class="drag-item" draggable="true" data-concept="flow">Flow&lt;T&gt;</div>
+                        <div class="drag-item" draggable="true" data-concept="interface">interface</div>
+                    </div>
+                    <div>
+                        <h4>Purposes</h4>
+                        <div class="drop-zone" data-answer="suspend-fun">
+                            Coroutine function for non-blocking async operations
+                        </div>
+                        <div class="drop-zone" data-answer="generics">
+                            Type constraint ensuring T is non-null
+                        </div>
+                        <div class="drop-zone" data-answer="flow">
+                            Reactive stream for real-time data updates
+                        </div>
+                        <div class="drop-zone" data-answer="interface">
+                            Contract defining what implementations must provide
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="checkQuizAnswers(5)">Check My Answers! 🎯</button>
+                <div id="quizResult5"></div>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Chapter 5 Summary</h4>
+                <p><strong>🤝 Interfaces:</strong> Contracts that define what classes must implement</p>
+                <p><strong>⚡ Suspend Functions:</strong> Non-blocking async operations with coroutines</p>
+                <p><strong>🧬 Generics:</strong> Type-safe code that works with any type</p>
+                <p><strong>🌊 Flow:</strong> Reactive streams for real-time data updates</p>
+                <p><strong>🏗️ Clean Architecture:</strong> Abstractions enable flexible, testable code</p>
+                <p><strong>🎯 Dependency Inversion:</strong> Depend on abstractions, not concretions</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+                <button class="btn" onclick="navigateToChapter('chapter4.html')">
+                    <i class="fas fa-arrow-left"></i> Previous: Extension Functions
+                </button>
+                <button class="btn" onclick="navigateToChapter('chapter6.html')">
+                    Next: Advanced Features <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Interface Architect! 🏗️</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let sectionsCompleted = 0;
+        const totalSections = 4;
+
+        function completeSection(sectionName) {
+            if (sectionsCompleted < totalSections) {
+                sectionsCompleted++;
+                updateChapterProgress(5, sectionsCompleted, totalSections);
+                updateProgressBar();
+
+                if (typeof learnConcept === 'function') {
+                    learnConcept('interfaces');
+                }
+
+                if (sectionsCompleted === totalSections) {
+                    showAchievement('Chapter 5 Complete! Interface Architecture Master! 🏗️');
+                }
+            }
+        }
+
+        function updateProgressBar() {
+            const percentage = (sectionsCompleted / totalSections) * 100;
+            document.getElementById('chapterProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${sectionsCompleted}/${totalSections} sections completed`;
+        }
+
+        // Initialize progress
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProgressBar();
+        });
+    </script>
+</body>
+
+</html>

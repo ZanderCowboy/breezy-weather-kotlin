@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From UI to Code - Understanding Android Development</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .ui-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .phone-mockup {
+            background: #000;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .screen {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            color: #2d3748;
+            min-height: 400px;
+        }
+
+        .weather-card {
+            background: linear-gradient(135deg, #4299e1, #667eea);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .weather-card:hover {
+            transform: scale(1.02);
+        }
+
+        .temperature {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .location {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .condition {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .action-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #38a169;
+        }
+
+        .code-mapping {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+            align-items: start;
+        }
+
+        .ui-side,
+        .code-side {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-side {
+            border-left: 4px solid #4299e1;
+        }
+
+        .code-side {
+            border-left: 4px solid #38a169;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 2em;
+            color: #ed8936;
+            margin: 20px 0;
+        }
+
+        .interaction-demo {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .step-indicator {
+            background: #4299e1;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .clickable-element {
+            border: 2px dashed #ed8936;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .clickable-element::after {
+            content: "👆 Click me!";
+            position: absolute;
+            top: -30px;
+            right: -10px;
+            background: #ed8936;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .file-structure {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .folder {
+            color: #ffd700;
+        }
+
+        .file {
+            color: #4fd1c7;
+        }
+
+        .highlight-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #ffd700;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .folder-line {
+            margin-bottom: 5px;
+        }
+
+        .indent-1 {
+            padding-left: 20px;
+        }
+
+        .indent-2 {
+            padding-left: 40px;
+        }
+
+        .indent-3 {
+            padding-left: 60px;
+        }
+
+        .indent-4 {
+            padding-left: 80px;
+        }
+
+        .indent-5 {
+            padding-left: 100px;
+        }
+
+        .comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .file-line {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-mobile-alt"></i> From UI to Code</h1>
+            <p>Understanding how what you see connects to what you code</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-eye"></i>
+                What You See vs. What Creates It
+            </h2>
+
+            <p>Ever wondered how that beautiful weather app screen actually gets created? Let's trace the journey from
+                Kotlin code to the pixels you see on screen! 🖥️</p>
+
+            <div class="ui-demo">
+                <h3>🎯 The Big Picture</h3>
+                <p>When you see a weather app, you're actually looking at the result of multiple layers working
+                    together:</p>
+                <ul style="line-height: 1.8;">
+                    <li><strong>📱 UI Layout Files (XML)</strong> - Define where things go</li>
+                    <li><strong>🎨 Kotlin Code</strong> - Makes things interactive and loads data</li>
+                    <li><strong>🖼️ Resources</strong> - Colors, icons, and text</li>
+                    <li><strong>⚙️ Android System</strong> - Renders everything to screen</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-mobile-alt"></i>
+                Interactive Demo: Weather Screen
+            </h2>
+
+            <p>Let's look at a typical weather screen and trace each element back to its code! Click on the elements
+                below:</p>
+
+            <div class="code-mapping">
+                <div class="ui-side">
+                    <h4><i class="fas fa-eye"></i> What You See</h4>
+                    <div class="phone-mockup">
+                        <div class="screen">
+                            <div class="clickable-element" onclick="showCodeMapping('location')">
+                                <div class="location" id="locationText">📍 New York</div>
+                            </div>
+
+                            <div class="weather-card clickable-element" onclick="showCodeMapping('weatherCard')">
+                                <div class="clickable-element" onclick="showCodeMapping('temperature')"
+                                    style="border: none; margin: 0;">
+                                    <div class="temperature" id="temperatureText">22°C</div>
+                                </div>
+                                <div class="clickable-element" onclick="showCodeMapping('condition')"
+                                    style="border: none; margin: 0;">
+                                    <div class="condition" id="conditionText">☀️ Sunny</div>
+                                </div>
+                            </div>
+
+                            <div class="clickable-element" onclick="showCodeMapping('refreshButton')">
+                                <button class="action-button">🔄 Refresh Weather</button>
+                            </div>
+
+                            <div class="clickable-element" onclick="showCodeMapping('settingsButton')">
+                                <button class="action-button">⚙️ Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-side">
+                    <h4><i class="fas fa-code"></i> The Code Behind It</h4>
+                    <div id="codeDisplay">
+                        <p style="color: #718096; text-align: center; padding: 40px;">
+                            👆 Click on any UI element on the left to see its code!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-route"></i>
+                The Journey: From User Tap to Code Execution
+            </h2>
+
+            <p>Let's follow what happens when you tap the "Refresh Weather" button:</p>
+
+            <div class="interaction-demo">
+                <div style="margin: 20px 0;">
+                    <span class="step-indicator">1</span>
+                    <strong>User taps button</strong> - Your finger touches the screen
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <div style="margin: 20px 0;">
+                    <span class="step-indicator">2</span>
+                    <strong>Android detects touch</strong> - System registers the tap event
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <div style="margin: 20px 0;">
+                    <span class="step-indicator">3</span>
+                    <strong>Button's onClick triggered</strong> - Your Kotlin function gets called
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <div style="margin: 20px 0;">
+                    <span class="step-indicator">4</span>
+                    <strong>ViewModel gets notified</strong> - Business logic starts executing
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <div style="margin: 20px 0;">
+                    <span class="step-indicator">5</span>
+                    <strong>Repository fetches data</strong> - Weather API gets called
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <div style="margin: 20px 0;">
+                    <span class="step-indicator">6</span>
+                    <strong>UI updates</strong> - New weather data appears on screen
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-folder-open"></i>
+                File Structure: Where to Find Things
+            </h2>
+
+            <p>When you want to modify something you see, here's where to look in the BreezyWeather codebase:</p>
+
+            <div class="file-structure">
+                <div class="folder-line">📁 app/src/main/</div>
+                <div class="folder-line indent-1">📁 java/org/breezyweather/</div>
+                <div class="folder-line indent-2">📁 ui/ <span class="comment">← UI Controllers (Activities,
+                        Fragments)</span></div>
+                <div class="folder-line indent-3">📁 main/</div>
+                <div class="file-line indent-4">📄 MainActivity.kt <span class="comment">← Main screen controller</span>
+                </div>
+                <div class="file-line indent-4">📄 MainActivityViewModel.kt <span class="comment">← Business logic &
+                        state</span></div>
+                <div class="folder-line indent-4">📁 fragments/</div>
+                <div class="file-line indent-5">📄 HomeFragment.kt <span class="comment">← Home screen UI logic</span>
+                </div>
+                <div class="folder-line indent-3">📁 search/</div>
+                <div class="file-line indent-4">📄 SearchActivity.kt <span class="comment">← Search screen</span></div>
+                <div class="folder-line indent-3">📁 settings/</div>
+                <div class="file-line indent-4">📄 SettingsActivity.kt <span class="comment">← Settings screen</span>
+                </div>
+                <div class="folder-line indent-2">📁 common/extensions/ <span class="comment">← Helper functions</span>
+                </div>
+                <div class="folder-line indent-1">📁 res/ <span class="comment">← Resources (layouts, images,
+                        colors)</span></div>
+                <div class="folder-line indent-2">📁 layout/ <span class="comment">← XML layout files</span></div>
+                <div class="file-line indent-3">📄 activity_main.xml <span class="comment">← Main screen layout</span>
+                </div>
+                <div class="file-line indent-3">📄 fragment_home.xml <span class="comment">← Home fragment layout</span>
+                </div>
+                <div class="file-line indent-3">📄 item_weather_card.xml <span class="comment">← Weather card
+                        layout</span></div>
+                <div class="folder-line indent-2">📁 values/</div>
+                <div class="file-line indent-3">📄 colors.xml <span class="comment">← App colors</span></div>
+                <div class="file-line indent-3">📄 strings.xml <span class="comment">← Text content</span></div>
+                <div class="file-line indent-3">📄 styles.xml <span class="comment">← UI styling</span></div>
+                <div class="folder-line indent-2">📁 drawable/ <span class="comment">← Icons and images</span></div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Quick Navigation Rules:</h4>
+                <ul style="line-height: 1.8; margin: 10px 0;">
+                    <li><strong>See a button?</strong> → Look in <code>res/layout/</code> for the XML, then the
+                        corresponding Activity/Fragment</li>
+                    <li><strong>Want to change colors?</strong> → <code>res/values/colors.xml</code></li>
+                    <li><strong>Need to modify text?</strong> → <code>res/values/strings.xml</code></li>
+                    <li><strong>Button not working?</strong> → Check the Activity's <code>onClick</code> method</li>
+                    <li><strong>Data not loading?</strong> → Look in the ViewModel and Repository</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-tools"></i>
+                Practical Examples from BreezyWeather
+            </h2>
+
+            <div class="code-mapping">
+                <div class="ui-side">
+                    <h4>🌡️ Temperature Display</h4>
+                    <p><strong>What you see:</strong> "22°C" in big, bold text</p>
+                    <p><strong>Where it comes from:</strong></p>
+                    <ul>
+                        <li>Data: <code>Weather.current.temperature</code></li>
+                        <li>Display: <code>HomeFragment.kt</code></li>
+                        <li>Formatting: Extension functions</li>
+                    </ul>
+                </div>
+
+                <div class="code-side">
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// In HomeFragment.kt</span>
+<span class="kotlin-keyword">fun</span> updateTemperature(weather: <span class="kotlin-type">Weather</span>) {
+    <span class="kotlin-keyword">val</span> temp = weather.current?.temperature?.temperature
+    binding.temperatureText.text = <span class="kotlin-string">"${temp?.toInt()}°C"</span>
+}
+
+<span class="kotlin-comment">// Data comes from Weather data class</span>
+<span class="kotlin-keyword">data class</span> <span class="kotlin-type">Temperature</span>(
+    <span class="kotlin-keyword">val</span> temperature: <span class="kotlin-type">Double?</span>
+)</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-mapping">
+                <div class="ui-side">
+                    <h4>🔄 Refresh Button</h4>
+                    <p><strong>What you see:</strong> A button that updates weather when tapped</p>
+                    <p><strong>What happens when tapped:</strong></p>
+                    <ol>
+                        <li>Button click detected</li>
+                        <li>ViewModel called</li>
+                        <li>Weather repository fetches data</li>
+                        <li>UI updates with new data</li>
+                    </ol>
+                </div>
+
+                <div class="code-side">
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// In activity_main.xml</span>
+&lt;Button
+    android:id="@+id/refreshButton"
+    android:text="Refresh Weather"
+    android:onClick="onRefreshClicked" /&gt;
+
+<span class="kotlin-comment">// In MainActivity.kt</span>
+<span class="kotlin-keyword">fun</span> onRefreshClicked(view: <span class="kotlin-type">View</span>) {
+    viewModel.refreshWeather() <span class="kotlin-comment">// Calls ViewModel</span>
+}
+
+<span class="kotlin-comment">// In MainActivityViewModel.kt</span>
+<span class="kotlin-keyword">fun</span> refreshWeather() {
+    viewModelScope.launch {
+        <span class="kotlin-keyword">val</span> weather = repository.getCurrentWeather()
+        _weatherData.value = weather <span class="kotlin-comment">// Updates UI</span>
+    }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-mapping">
+                <div class="ui-side">
+                    <h4>📍 Location Display</h4>
+                    <p><strong>What you see:</strong> "New York" with a location icon</p>
+                    <p><strong>How it's built:</strong></p>
+                    <ul>
+                        <li>Icon: drawable resource</li>
+                        <li>Text: from Location data class</li>
+                        <li>Styling: from styles.xml</li>
+                    </ul>
+                </div>
+
+                <div class="code-side">
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// From Location data class</span>
+<span class="kotlin-keyword">data class</span> <span class="kotlin-type">Location</span>(
+    <span class="kotlin-keyword">val</span> cityName: <span class="kotlin-type">String</span>,
+    <span class="kotlin-keyword">val</span> country: <span class="kotlin-type">String</span>
+) {
+    <span class="kotlin-keyword">val</span> displayName get() = <span class="kotlin-string">"$cityName, $country"</span>
+}
+
+<span class="kotlin-comment">// In layout XML</span>
+&lt;TextView
+    android:drawableStart="@drawable/ic_location"
+    android:text="@{location.displayName}"
+    style="@style/LocationTextStyle" /&gt;
+
+<span class="kotlin-comment">// Updated in Fragment</span>
+binding.location = currentLocation</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-bug"></i>
+                Debugging: When Things Don't Work
+            </h2>
+
+            <div class="interaction-demo">
+                <h4>🔍 Common Issues & Where to Look:</h4>
+
+                <div style="margin: 15px 0; padding: 15px; background: #fed7d7; border-radius: 8px;">
+                    <h5>❌ Button doesn't respond to clicks</h5>
+                    <p><strong>Check:</strong></p>
+                    <ul>
+                        <li>Is <code>android:onClick</code> set in XML?</li>
+                        <li>Does the function exist in the Activity?</li>
+                        <li>Is the button enabled? (<code>android:enabled="true"</code>)</li>
+                    </ul>
+                </div>
+
+                <div style="margin: 15px 0; padding: 15px; background: #feebc8; border-radius: 8px;">
+                    <h5>⚠️ Data not showing up</h5>
+                    <p><strong>Check:</strong></p>
+                    <ul>
+                        <li>Is the ViewModel updating the LiveData/StateFlow?</li>
+                        <li>Is the UI observing the data changes?</li>
+                        <li>Is the Repository actually fetching data?</li>
+                    </ul>
+                </div>
+
+                <div style="margin: 15px 0; padding: 15px; background: #e6fffa; border-radius: 8px;">
+                    <h5>✅ UI looks wrong</h5>
+                    <p><strong>Check:</strong></p>
+                    <ul>
+                        <li>Layout XML files for positioning</li>
+                        <li>styles.xml for styling</li>
+                        <li>colors.xml for color definitions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i>
+                Pro Tips for Android Development
+            </h2>
+
+            <div class="highlight-box"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h4>🎯 Essential Development Workflow:</h4>
+                <ol style="line-height: 1.8;">
+                    <li><strong>Design the UI</strong> → Create/modify XML layout files</li>
+                    <li><strong>Add interactions</strong> → Write Kotlin click handlers</li>
+                    <li><strong>Connect data</strong> → Use ViewModels and LiveData/StateFlow</li>
+                    <li><strong>Test on device</strong> → Run app and interact with real UI</li>
+                    <li><strong>Debug issues</strong> → Use Android Studio debugger and logs</li>
+                </ol>
+            </div>
+
+            <div class="code-mapping">
+                <div class="ui-side">
+                    <h4>🛠️ Development Tools</h4>
+                    <ul>
+                        <li><strong>Layout Inspector:</strong> See live UI hierarchy</li>
+                        <li><strong>Logcat:</strong> Debug print statements</li>
+                        <li><strong>Debugger:</strong> Step through code execution</li>
+                        <li><strong>Device preview:</strong> Test different screen sizes</li>
+                    </ul>
+                </div>
+
+                <div class="code-side">
+                    <h4>🎨 UI Modification Tips</h4>
+                    <ul>
+                        <li><strong>Small changes:</strong> Modify XML attributes</li>
+                        <li><strong>New elements:</strong> Add views to layout files</li>
+                        <li><strong>Styling:</strong> Use themes and styles</li>
+                        <li><strong>Dynamic content:</strong> Update via Kotlin code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+            <button class="btn" onclick="navigateToChapter('architecture-overview.html')">
+                <i class="fas fa-sitemap"></i> Architecture Overview
+            </button>
+            <button class="btn" onclick="navigateHome()">
+                <i class="fas fa-home"></i> Back to Home
+            </button>
+            <button class="btn" onclick="navigateToChapter('codebase-explorer.html')">
+                <i class="fas fa-folder-open"></i> Explore Codebase
+            </button>
+        </div>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function showCodeMapping(elementType) {
+            const codeDisplay = document.getElementById('codeDisplay');
+
+            const codeMappings = {
+                location: {
+                    title: '📍 Location Display',
+                    description: 'Shows the current location name from the Location data class',
+                    code: `// Location data class
+data class Location(
+    val cityName: String,
+    val country: String,
+    val latitude: Double,
+    val longitude: Double
+) {
+    val displayName get() = "$cityName, $country"
+}
+
+// In HomeFragment.kt
+fun updateLocation(location: Location) {
+    binding.locationText.text = location.displayName
+}
+
+// Layout XML (fragment_home.xml)
+<TextView
+    android:id="@+id/locationText"
+    android:drawableStart="@drawable/ic_location"
+    android:text="Current Location"
+    style="@style/LocationTextStyle" />`,
+                    files: [
+                        'domain/src/main/java/breezyweather/domain/location/model/Location.kt',
+                        'app/src/main/java/org/breezyweather/ui/main/fragments/HomeFragment.kt',
+                        'app/src/main/res/layout/fragment_home.xml'
+                    ]
+                },
+
+                temperature: {
+                    title: '🌡️ Temperature Display',
+                    description: 'Shows the current temperature from weather data',
+                    code: `// Temperature data class
+data class Temperature(
+    val temperature: Double?,
+    val realFeelTemperature: Double?,
+    val apparentTemperature: Double?
+)
+
+// Weather data class
+data class Weather(
+    val current: Current?
+) {
+    data class Current(
+        val temperature: Temperature?
+    )
+}
+
+// In HomeFragment.kt
+fun updateTemperature(weather: Weather) {
+    val temp = weather.current?.temperature?.temperature
+    binding.temperatureText.text = "\${temp?.toInt()}°C"
+}`,
+                    files: [
+                        'domain/src/main/java/breezyweather/domain/weather/model/Temperature.kt',
+                        'domain/src/main/java/breezyweather/domain/weather/model/Weather.kt',
+                        'app/src/main/java/org/breezyweather/ui/main/fragments/HomeFragment.kt'
+                    ]
+                },
+
+                condition: {
+                    title: '☀️ Weather Condition',
+                    description: 'Shows weather condition using WeatherCode enum',
+                    code: `// WeatherCode enum class
+enum class WeatherCode {
+    CLEAR, PARTLY_CLOUDY, CLOUDY,
+    RAIN, SNOW, THUNDERSTORM;
+    
+    companion object {
+        fun getIcon(code: WeatherCode): String = when(code) {
+            CLEAR -> "☀️"
+            PARTLY_CLOUDY -> "⛅"
+            RAIN -> "🌧️"
+            else -> "🌤️"
+        }
+    }
+}
+
+// In HomeFragment.kt
+fun updateCondition(weather: Weather) {
+    val code = weather.current?.weatherCode
+    val icon = WeatherCode.getIcon(code)
+    val text = weather.current?.weatherText
+    binding.conditionText.text = "$icon $text"
+}`,
+                    files: [
+                        'domain/src/main/java/breezyweather/domain/weather/model/WeatherCode.kt',
+                        'app/src/main/java/org/breezyweather/ui/main/fragments/HomeFragment.kt'
+                    ]
+                },
+
+                weatherCard: {
+                    title: '🌤️ Weather Card Container',
+                    description: 'The card that contains all weather information',
+                    code: `// Layout XML (item_weather_card.xml)
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp">
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="20dp">
+        
+        <TextView android:id="@+id/temperatureText" />
+        <TextView android:id="@+id/conditionText" />
+        
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+// In HomeFragment.kt
+fun updateWeatherCard(weather: Weather) {
+    updateTemperature(weather)
+    updateCondition(weather)
+    updateHumidity(weather)
+}`,
+                    files: [
+                        'app/src/main/res/layout/item_weather_card.xml',
+                        'app/src/main/java/org/breezyweather/ui/main/fragments/HomeFragment.kt'
+                    ]
+                },
+
+                refreshButton: {
+                    title: '🔄 Refresh Button',
+                    description: 'Button that triggers weather data refresh',
+                    code: `// Layout XML
+<Button
+    android:id="@+id/refreshButton"
+    android:text="@string/refresh_weather"
+    android:onClick="onRefreshClicked"
+    style="@style/Widget.App.Button" />
+
+// In MainActivity.kt
+fun onRefreshClicked(view: View) {
+    // Show loading indicator
+    binding.progressBar.isVisible = true
+    
+    // Call ViewModel to refresh
+    viewModel.refreshWeather()
+}
+
+// In MainActivityViewModel.kt
+fun refreshWeather() {
+    viewModelScope.launch {
+        try {
+            val weather = weatherRepository.getCurrentWeather()
+            _weatherData.value = weather
+        } catch (e: Exception) {
+            _error.value = "Failed to refresh weather"
+        }
+    }
+}`,
+                    files: [
+                        'app/src/main/res/layout/activity_main.xml',
+                        'app/src/main/java/org/breezyweather/ui/main/MainActivity.kt',
+                        'app/src/main/java/org/breezyweather/ui/main/MainActivityViewModel.kt'
+                    ]
+                },
+
+                settingsButton: {
+                    title: '⚙️ Settings Button',
+                    description: 'Navigation to settings screen',
+                    code: `// Layout XML
+<Button
+    android:id="@+id/settingsButton"
+    android:text="@string/settings"
+    android:onClick="openSettings" />
+
+// In MainActivity.kt
+fun openSettings(view: View) {
+    val intent = Intent(this, SettingsActivity::class.java)
+    startActivity(intent)
+}
+
+// In SettingsActivity.kt
+class SettingsActivity : GeoActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+        
+        setupPreferences()
+    }
+}`,
+                    files: [
+                        'app/src/main/java/org/breezyweather/ui/main/MainActivity.kt',
+                        'app/src/main/java/org/breezyweather/ui/settings/activities/SettingsActivity.kt',
+                        'app/src/main/res/layout/activity_settings.xml'
+                    ]
+                }
+            };
+
+            const mapping = codeMappings[elementType];
+            if (mapping) {
+                codeDisplay.innerHTML = `
+                    <h4 style="color: #38a169; margin-bottom: 15px;">${mapping.title}</h4>
+                    <p style="color: #4a5568; margin-bottom: 15px;">${mapping.description}</p>
+                    <div class="code-example">
+                        <pre style="font-size: 0.8em; line-height: 1.4;">${mapping.code}</pre>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <h5 style="color: #4a5568;">📁 Files to explore:</h5>
+                        <ul style="font-size: 0.9em; color: #718096;">
+                            ${mapping.files.map(file => `<li><code>${file}</code></li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        // Add some interactive demo behavior
+        document.addEventListener('DOMContentLoaded', function () {
+            // Simulate real app behavior
+            const refreshButton = document.querySelector('.action-button');
+            if (refreshButton && refreshButton.textContent.includes('Refresh')) {
+                refreshButton.addEventListener('click', function () {
+                    // Simulate loading
+                    this.textContent = '⏳ Loading...';
+                    this.style.opacity = '0.7';
+
+                    setTimeout(() => {
+                        // Update temperature with random value
+                        const temp = Math.floor(Math.random() * 20) + 15;
+                        document.getElementById('temperatureText').textContent = temp + '°C';
+
+                        // Reset button
+                        this.textContent = '🔄 Refresh Weather';
+                        this.style.opacity = '1';
+
+                        // Show achievement
+                        if (typeof showAchievement === 'function') {
+                            showAchievement('Weather refreshed! See how the button click triggered code execution! 🔄');
+                        }
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

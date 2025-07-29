@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kotlin Cheatsheet - Quick Reference</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-alt"></i> Kotlin Quick Reference</h1>
+            <p>Essential syntax and patterns at your fingertips</p>
+        </div>
+
+        <div class="cheatsheet-grid">
+            <div class="cheat-section">
+                <h3><i class="fas fa-mobile-alt"></i> Application Classes</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// App entry point</span>
+<span class="kotlin-keyword">@HiltAndroidApp</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">MyApp</span> : <span class="kotlin-type">Application</span>() {
+    <span class="kotlin-keyword">companion object</span> {
+        <span class="kotlin-keyword">lateinit var</span> instance: <span class="kotlin-type">MyApp</span>
+    }
+    
+    <span class="kotlin-keyword">override fun</span> onCreate() {
+        <span class="kotlin-keyword">super</span>.onCreate()
+        instance = <span class="kotlin-keyword">this</span>
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-box"></i> Data Classes</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Auto-generated methods</span>
+<span class="kotlin-keyword">data class</span> <span class="kotlin-type">User</span>(
+    <span class="kotlin-keyword">val</span> name: <span class="kotlin-type">String</span>,
+    <span class="kotlin-keyword">val</span> age: <span class="kotlin-type">Int</span>,
+    <span class="kotlin-keyword">val</span> email: <span class="kotlin-type">String?</span> = <span class="kotlin-keyword">null</span>
+) {
+    <span class="kotlin-comment">// Custom getter</span>
+    <span class="kotlin-keyword">val</span> isAdult get() = age >= <span class="kotlin-string">18</span>
+}
+
+<span class="kotlin-comment">// Usage</span>
+<span class="kotlin-keyword">val</span> user = <span class="kotlin-type">User</span>(<span class="kotlin-string">"Alice"</span>, <span class="kotlin-string">25</span>)
+<span class="kotlin-keyword">val</span> copy = user.copy(age = <span class="kotlin-string">26</span>)</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-tags"></i> Enum Classes</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Type-safe constants</span>
+<span class="kotlin-keyword">enum class</span> <span class="kotlin-type">Status</span>(<span class="kotlin-keyword">val</span> message: <span class="kotlin-type">String</span>) {
+    LOADING(<span class="kotlin-string">"Loading..."</span>),
+    SUCCESS(<span class="kotlin-string">"Done!"</span>),
+    ERROR(<span class="kotlin-string">"Failed"</span>);
+    
+    <span class="kotlin-keyword">companion object</span> {
+        <span class="kotlin-keyword">fun</span> fromCode(code: <span class="kotlin-type">Int</span>) = 
+            entries.getOrNull(code)
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-magic"></i> Extension Functions</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Add methods to existing classes</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.isEmail(): <span class="kotlin-type">Boolean</span> {
+    <span class="kotlin-keyword">return</span> <span class="kotlin-keyword">this</span>.contains(<span class="kotlin-string">"@"</span>)
+}
+
+<span class="kotlin-comment">// Extension property</span>
+<span class="kotlin-keyword">val</span> <span class="kotlin-type">Date</span>.isToday: <span class="kotlin-type">Boolean</span>
+    get() = <span class="kotlin-comment">/* check if today */</span>
+
+<span class="kotlin-comment">// Usage</span>
+<span class="kotlin-string">"user@example.com"</span>.isEmail() <span class="kotlin-comment">// true</span></pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-handshake"></i> Interfaces</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Contract definition</span>
+<span class="kotlin-keyword">interface</span> <span class="kotlin-type">Repository</span>&lt;<span class="kotlin-type">T</span>&gt; {
+    <span class="kotlin-keyword">suspend fun</span> getAll(): <span class="kotlin-type">List&lt;T&gt;</span>
+    <span class="kotlin-keyword">suspend fun</span> save(item: <span class="kotlin-type">T</span>)
+    
+    <span class="kotlin-comment">// Default implementation</span>
+    <span class="kotlin-keyword">fun</span> isEmpty() = getAll().isEmpty()
+}
+
+<span class="kotlin-comment">// Implementation</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">UserRepo</span> : <span class="kotlin-type">Repository&lt;User&gt;</span> {
+    <span class="kotlin-keyword">override suspend fun</span> getAll() = <span class="kotlin-comment">/* ... */</span>
+}</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-lightning-bolt"></i> Coroutines</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Async programming</span>
+<span class="kotlin-keyword">suspend fun</span> loadData(): <span class="kotlin-type">Data</span> {
+    <span class="kotlin-keyword">return</span> withContext(<span class="kotlin-type">Dispatchers</span>.IO) {
+        api.fetchData()
+    }
+}
+
+<span class="kotlin-comment">// Launch coroutines</span>
+viewModelScope.launch {
+    <span class="kotlin-keyword">val</span> data = loadData()
+    updateUI(data)
+}
+
+<span class="kotlin-comment">// Parallel execution</span>
+<span class="kotlin-keyword">val</span> user = async { getUser() }
+<span class="kotlin-keyword">val</span> posts = async { getPosts() }
+combine(user.await(), posts.await())</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-stream"></i> Flow</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Reactive streams</span>
+<span class="kotlin-keyword">fun</span> observeData(): <span class="kotlin-type">Flow&lt;Data&gt;</span> = flow {
+    <span class="kotlin-keyword">while</span> (<span class="kotlin-keyword">true</span>) {
+        emit(fetchLatest())
+        delay(<span class="kotlin-string">1000</span>)
+    }
+}
+
+<span class="kotlin-comment">// Transform data</span>
+<span class="kotlin-keyword">val</span> names = users
+    .map { it.name }
+    .filter { it.isNotEmpty() }
+    .distinctUntilChanged()
+
+<span class="kotlin-comment">// Collect in UI</span>
+data.collect { updateUI(it) }</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-shield-alt"></i> Sealed Classes</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Type-safe state management</span>
+<span class="kotlin-keyword">sealed class</span> <span class="kotlin-type">Result&lt;T&gt;</span> {
+    <span class="kotlin-keyword">data class</span> <span class="kotlin-type">Success&lt;T&gt;</span>(<span class="kotlin-keyword">val</span> data: <span class="kotlin-type">T</span>) : <span class="kotlin-type">Result&lt;T&gt;</span>()
+    <span class="kotlin-keyword">data class</span> <span class="kotlin-type">Error&lt;T&gt;</span>(<span class="kotlin-keyword">val</span> message: <span class="kotlin-type">String</span>) : <span class="kotlin-type">Result&lt;T&gt;</span>()
+    <span class="kotlin-keyword">class</span> <span class="kotlin-type">Loading&lt;T&gt;</span> : <span class="kotlin-type">Result&lt;T&gt;</span>()
+}
+
+<span class="kotlin-comment">// Exhaustive when</span>
+<span class="kotlin-keyword">when</span> (result) {
+    <span class="kotlin-keyword">is</span> <span class="kotlin-type">Result</span>.Success -> showData(result.data)
+    <span class="kotlin-keyword">is</span> <span class="kotlin-type">Result</span>.Error -> showError(result.message)
+    <span class="kotlin-keyword">is</span> <span class="kotlin-type">Result</span>.Loading -> showLoading()
+}</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-exclamation-triangle"></i> Null Safety</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Nullable types</span>
+<span class="kotlin-keyword">var</span> name: <span class="kotlin-type">String?</span> = <span class="kotlin-keyword">null</span>
+
+<span class="kotlin-comment">// Safe calls</span>
+name?.length
+name?.uppercase()
+
+<span class="kotlin-comment">// Elvis operator</span>
+<span class="kotlin-keyword">val</span> length = name?.length ?: <span class="kotlin-string">0</span>
+
+<span class="kotlin-comment">// let for non-null</span>
+name?.let { println(it) }
+
+<span class="kotlin-comment">// Not-null assertion</span>
+name!!.length <span class="kotlin-comment">// Throws if null</span></pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-code-branch"></i> When Expressions</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Smart switch</span>
+<span class="kotlin-keyword">when</span> (status) {
+    <span class="kotlin-type">Status</span>.LOADING -> showSpinner()
+    <span class="kotlin-type">Status</span>.SUCCESS -> hideSpinner()
+    <span class="kotlin-keyword">else</span> -> showError()
+}
+
+<span class="kotlin-comment">// Expression form</span>
+<span class="kotlin-keyword">val</span> message = <span class="kotlin-keyword">when</span> (code) {
+    <span class="kotlin-string">200</span> -> <span class="kotlin-string">"OK"</span>
+    <span class="kotlin-string">404</span> -> <span class="kotlin-string">"Not Found"</span>
+    <span class="kotlin-keyword">in</span> <span class="kotlin-string">500</span>..<span class="kotlin-string">599</span> -> <span class="kotlin-string">"Server Error"</span>
+    <span class="kotlin-keyword">else</span> -> <span class="kotlin-string">"Unknown"</span>
+}</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-arrows-alt"></i> Higher-Order Functions</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Functions as parameters</span>
+<span class="kotlin-keyword">fun</span> processData(
+    data: <span class="kotlin-type">List&lt;String&gt;</span>,
+    transform: (String) -> <span class="kotlin-type">String</span>
+): <span class="kotlin-type">List&lt;String&gt;</span> = data.map(transform)
+
+<span class="kotlin-comment">// Usage</span>
+processData(names) { it.uppercase() }
+
+<span class="kotlin-comment">// Function types</span>
+<span class="kotlin-keyword">typealias</span> <span class="kotlin-type">Validator</span> = (String) -> <span class="kotlin-type">Boolean</span>
+<span class="kotlin-keyword">val</span> emailValidator: <span class="kotlin-type">Validator</span> = { it.contains(<span class="kotlin-string">"@"</span>) }</pre>
+                </div>
+            </div>
+
+            <div class="cheat-section">
+                <h3><i class="fas fa-dna"></i> Scope Functions</h3>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// apply - configure & return object</span>
+<span class="kotlin-keyword">val</span> user = <span class="kotlin-type">User</span>().apply {
+    name = <span class="kotlin-string">"Alice"</span>
+    age = <span class="kotlin-string">25</span>
+}
+
+<span class="kotlin-comment">// let - transform non-null</span>
+user?.let { saveToDatabase(it) }
+
+<span class="kotlin-comment">// run - execute block</span>
+<span class="kotlin-keyword">val</span> result = user.run {
+    <span class="kotlin-string">"Name: $name, Age: $age"</span>
+}
+
+<span class="kotlin-comment">// also - side effects</span>
+user.also { println(<span class="kotlin-string">"User: $it"</span>) }</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-brain"></i>
+                Memory Hacks Recap
+            </h2>
+
+            <div class="memory-grid">
+                <div class="memory-card">
+                    <h4>K.O.T.L.I.N</h4>
+                    <p><strong>K</strong>eep it simple - clean syntax</p>
+                    <p><strong>O</strong>bject-oriented + functional</p>
+                    <p><strong>T</strong>ype-safe with null safety</p>
+                    <p><strong>L</strong>ambdas for functional programming</p>
+                    <p><strong>I</strong>nteroperability with Java</p>
+                    <p><strong>N</strong>ull safety built-in</p>
+                </div>
+
+                <div class="memory-card">
+                    <h4>C.E.T.H</h4>
+                    <p><strong>C</strong>opy function for data classes</p>
+                    <p><strong>E</strong>quals & hashCode auto-generated</p>
+                    <p><strong>T</strong>oString for debugging</p>
+                    <p><strong>H</strong>andling immutability perfectly</p>
+                </div>
+
+                <div class="memory-card">
+                    <h4>A.P.P</h4>
+                    <p><strong>A</strong>pplication class extends Application</p>
+                    <p><strong>P</strong>rovides global context & setup</p>
+                    <p><strong>P</strong>erfect for dependency injection</p>
+                </div>
+
+                <div class="memory-card">
+                    <h4>P.O.W.E.R</h4>
+                    <p><strong>P</strong>arallel programming with coroutines</p>
+                    <p><strong>O</strong>bservable data with flows</p>
+                    <p><strong>W</strong>hen expressions with sealed classes</p>
+                    <p><strong>E</strong>xtension everything</p>
+                    <p><strong>R</strong>eactive architecture patterns</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-keyboard"></i>
+                Common Patterns
+            </h2>
+
+            <div class="pattern-grid">
+                <div class="pattern-card">
+                    <h4><i class="fas fa-layer-group"></i> Repository Pattern</h4>
+                    <div class="code-example">
+                        <pre><span class="kotlin-keyword">interface</span> <span class="kotlin-type">Repository&lt;T&gt;</span> {
+    <span class="kotlin-keyword">suspend fun</span> getAll(): <span class="kotlin-type">List&lt;T&gt;</span>
+    <span class="kotlin-keyword">fun</span> observe(): <span class="kotlin-type">Flow&lt;List&lt;T&gt;&gt;</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <h4><i class="fas fa-eye"></i> Observer Pattern with Flow</h4>
+                    <div class="code-example">
+                        <pre><span class="kotlin-keyword">class</span> <span class="kotlin-type">ViewModel</span> {
+    <span class="kotlin-keyword">private val</span> _state = <span class="kotlin-type">MutableStateFlow</span>(State.Loading)
+    <span class="kotlin-keyword">val</span> state = _state.asStateFlow()
+}</pre>
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <h4><i class="fas fa-factory"></i> Factory Pattern</h4>
+                    <div class="code-example">
+                        <pre><span class="kotlin-keyword">object</span> <span class="kotlin-type">UserFactory</span> {
+    <span class="kotlin-keyword">fun</span> create(type: <span class="kotlin-type">UserType</span>) = <span class="kotlin-keyword">when</span>(type) {
+        <span class="kotlin-type">UserType</span>.ADMIN -> <span class="kotlin-type">AdminUser</span>()
+        <span class="kotlin-type">UserType</span>.GUEST -> <span class="kotlin-type">GuestUser</span>()
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <h4><i class="fas fa-building"></i> Builder Pattern</h4>
+                    <div class="code-example">
+                        <pre><span class="kotlin-keyword">class</span> <span class="kotlin-type">RequestBuilder</span> {
+    <span class="kotlin-keyword">fun</span> url(url: <span class="kotlin-type">String</span>) = apply { <span class="kotlin-comment">/* ... */</span> }
+    <span class="kotlin-keyword">fun</span> headers(headers: <span class="kotlin-type">Map&lt;String, String&gt;</span>) = apply { <span class="kotlin-comment">/* ... */</span> }
+    <span class="kotlin-keyword">fun</span> build(): <span class="kotlin-type">Request</span> = <span class="kotlin-comment">/* ... */</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <button class="btn" onclick="navigateHome()">
+                <i class="fas fa-home"></i> Back to Home
+            </button>
+            <button class="btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Cheatsheet
+            </button>
+        </div>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

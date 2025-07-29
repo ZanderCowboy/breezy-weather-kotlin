@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quizzes - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-brain"></i> Interactive Kotlin Quizzes</h1>
+            <p>Test your knowledge with drag & drop challenges and interactive exercises</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="quizProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/6 quizzes completed</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="stat-card">
+                <i class="fas fa-trophy" style="color: #ffd700;"></i>
+                <h3>Quizzes Passed</h3>
+                <div class="stat-number" id="quizzesPassed">0</div>
+                <p>out of 6</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-percent" style="color: #4299e1;"></i>
+                <h3>Average Score</h3>
+                <div class="stat-number" id="averageScore">0</div>
+                <p>percent</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock" style="color: #38a169;"></i>
+                <h3>Time Spent</h3>
+                <div class="stat-number" id="timeSpent">0</div>
+                <p>minutes</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star" style="color: #e53e3e;"></i>
+                <h3>Perfect Scores</h3>
+                <div class="stat-number" id="perfectScores">0</div>
+                <p>achieved</p>
+            </div>
+        </div>
+
+        <!-- Quiz 1: Application Classes -->
+        <div class="quiz-section">
+            <h2><i class="fas fa-mobile-alt"></i> Quiz 1: Application Classes</h2>
+            <p>Match the Android Application concepts with their descriptions!</p>
+
+            <div class="drag-drop-area">
+                <div>
+                    <h3>Concepts</h3>
+                    <div class="drag-item" draggable="true" data-concept="hilt-annotation">@HiltAndroidApp</div>
+                    <div class="drag-item" draggable="true" data-concept="companion">companion object</div>
+                    <div class="drag-item" draggable="true" data-concept="lateinit">lateinit var</div>
+                    <div class="drag-item" draggable="true" data-concept="lazy">by lazy</div>
+                </div>
+                <div>
+                    <h3>Descriptions</h3>
+                    <div class="drop-zone" data-answer="hilt-annotation">
+                        Enables dependency injection throughout the app
+                    </div>
+                    <div class="drop-zone" data-answer="companion">
+                        Kotlin's way of creating static members
+                    </div>
+                    <div class="drop-zone" data-answer="lateinit">
+                        Promise to initialize a variable before using it
+                    </div>
+                    <div class="drop-zone" data-answer="lazy">
+                        Deferred initialization until first access
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuizAnswers(1)">Check Quiz 1 Answers! 🎯</button>
+            <div id="quizResult1"></div>
+        </div>
+
+        <!-- Quiz 2: Data Classes -->
+        <div class="quiz-section">
+            <h2><i class="fas fa-database"></i> Quiz 2: Data Classes</h2>
+            <p>Match the data class features with their benefits!</p>
+
+            <div class="drag-drop-area">
+                <div>
+                    <h3>Features</h3>
+                    <div class="drag-item" draggable="true" data-concept="copy-function">copy()</div>
+                    <div class="drag-item" draggable="true" data-concept="nullable-types">Double?</div>
+                    <div class="drag-item" draggable="true" data-concept="when-expression">when</div>
+                    <div class="drag-item" draggable="true" data-concept="data-keyword">data class</div>
+                </div>
+                <div>
+                    <h3>Benefits</h3>
+                    <div class="drop-zone" data-answer="copy-function">
+                        Clone object with optional modifications
+                    </div>
+                    <div class="drop-zone" data-answer="nullable-types">
+                        Safe null handling at compile time
+                    </div>
+                    <div class="drop-zone" data-answer="when-expression">
+                        Smart pattern matching with ranges
+                    </div>
+                    <div class="drop-zone" data-answer="data-keyword">
+                        Auto-generates equals, hashCode, toString
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuizAnswers(2)">Check Quiz 2 Answers! 🎯</button>
+            <div id="quizResult2"></div>
+        </div>
+
+        <!-- Quiz 3: Enum Classes -->
+        <div class="quiz-section">
+            <h2><i class="fas fa-list-alt"></i> Quiz 3: Enum Classes</h2>
+            <p>Match the enum concepts with their benefits!</p>
+
+            <div class="drag-drop-area">
+                <div>
+                    <h3>Concepts</h3>
+                    <div class="drag-item" draggable="true" data-concept="enum-class">enum class</div>
+                    <div class="drag-item" draggable="true" data-concept="companion-object">companion object</div>
+                    <div class="drag-item" draggable="true" data-concept="entries">entries</div>
+                    <div class="drag-item" draggable="true" data-concept="when-exhaustive">when expression</div>
+                </div>
+                <div>
+                    <h3>Benefits</h3>
+                    <div class="drop-zone" data-answer="enum-class">
+                        Type-safe constants with properties and methods
+                    </div>
+                    <div class="drop-zone" data-answer="companion-object">
+                        Static utility functions for enum operations
+                    </div>
+                    <div class="drop-zone" data-answer="entries">
+                        Modern way to get all enum values
+                    </div>
+                    <div class="drop-zone" data-answer="when-exhaustive">
+                        Compiler ensures all enum cases are handled
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuizAnswers(3)">Check Quiz 3 Answers! 🎯</button>
+            <div id="quizResult3"></div>
+        </div>
+
+        <!-- Quiz 4: Code Syntax Challenge -->
+        <div class="quiz-section">
+            <h2><i class="fas fa-code"></i> Quiz 4: Kotlin Syntax Challenge</h2>
+            <p>Match the Kotlin syntax with what it does!</p>
+
+            <div class="drag-drop-area">
+                <div>
+                    <h3>Syntax</h3>
+                    <div class="drag-item" draggable="true" data-concept="safe-call">?.</div>
+                    <div class="drag-item" draggable="true" data-concept="elvis">?:</div>
+                    <div class="drag-item" draggable="true" data-concept="range">in 1..10</div>
+                    <div class="drag-item" draggable="true" data-concept="destructuring">val (a, b) = pair</div>
+                </div>
+                <div>
+                    <h3>Purpose</h3>
+                    <div class="drop-zone" data-answer="safe-call">
+                        Safe call operator - returns null if receiver is null
+                    </div>
+                    <div class="drop-zone" data-answer="elvis">
+                        Elvis operator - provides default value if null
+                    </div>
+                    <div class="drop-zone" data-answer="range">
+                        Range check - tests if value is within range
+                    </div>
+                    <div class="drop-zone" data-answer="destructuring">
+                        Destructuring declaration - extracts components
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuizAnswers(4)">Check Quiz 4 Answers! 🎯</button>
+            <div id="quizResult4"></div>
+        </div>
+
+        <!-- Quiz 5: Code Reading Challenge -->
+        <div class="learning-section">
+            <h2><i class="fas fa-search"></i> Quiz 5: Code Reading Challenge</h2>
+            <p>What does this Kotlin code do? Choose the correct answer!</p>
+
+            <div class="code-example">
+                <pre><span class="kotlin-keyword">data class</span> <span class="kotlin-type">Temperature</span>(
+    <span class="kotlin-keyword">val</span> celsius: <span class="kotlin-type">Double?</span> = <span class="kotlin-keyword">null</span>,
+    <span class="kotlin-keyword">val</span> fahrenheit: <span class="kotlin-type">Double?</span> = <span class="kotlin-keyword">null</span>
+) {
+    <span class="kotlin-keyword">val</span> isValid: <span class="kotlin-type">Boolean</span>
+        <span class="kotlin-keyword">get</span>() = celsius != <span class="kotlin-keyword">null</span> || fahrenheit != <span class="kotlin-keyword">null</span>
+        
+    <span class="kotlin-keyword">val</span> inCelsius: <span class="kotlin-type">Double?</span>
+        <span class="kotlin-keyword">get</span>() = celsius ?: fahrenheit?.let { (it - <span class="kotlin-string">32</span>) * <span class="kotlin-string">5</span> / <span class="kotlin-string">9</span> }
+}</pre>
+            </div>
+
+            <div class="multiple-choice" id="quiz5">
+                <h3>What does this code do?</h3>
+                <div class="choice-option" onclick="selectChoice(5, 'a')">
+                    <input type="radio" name="quiz5" value="a">
+                    <label>A) Creates a simple temperature storage class</label>
+                </div>
+                <div class="choice-option" onclick="selectChoice(5, 'b')">
+                    <input type="radio" name="quiz5" value="b">
+                    <label>B) Stores temperature and converts Fahrenheit to Celsius when needed</label>
+                </div>
+                <div class="choice-option" onclick="selectChoice(5, 'c')">
+                    <input type="radio" name="quiz5" value="c">
+                    <label>C) Only works with Celsius temperatures</label>
+                </div>
+                <div class="choice-option" onclick="selectChoice(5, 'd')">
+                    <input type="radio" name="quiz5" value="d">
+                    <label>D) Requires both Celsius and Fahrenheit values</label>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkMultipleChoice(5, 'b')">Check Quiz 5 Answer! 🎯</button>
+            <div id="quizResult5"></div>
+        </div>
+
+        <!-- Quiz 6: Best Practices -->
+        <div class="quiz-section">
+            <h2><i class="fas fa-thumbs-up"></i> Quiz 6: Kotlin Best Practices</h2>
+            <p>Match the best practices with their reasons!</p>
+
+            <div class="drag-drop-area">
+                <div>
+                    <h3>Best Practices</h3>
+                    <div class="drag-item" draggable="true" data-concept="prefer-val">Prefer val over var</div>
+                    <div class="drag-item" draggable="true" data-concept="null-safety">Use nullable types</div>
+                    <div class="drag-item" draggable="true" data-concept="data-classes">Use data classes for data</div>
+                    <div class="drag-item" draggable="true" data-concept="when-sealed">Prefer when over if chains</div>
+                </div>
+                <div>
+                    <h3>Reasons</h3>
+                    <div class="drop-zone" data-answer="prefer-val">
+                        Immutability prevents bugs and improves thread safety
+                    </div>
+                    <div class="drop-zone" data-answer="null-safety">
+                        Eliminates NullPointerExceptions at compile time
+                    </div>
+                    <div class="drop-zone" data-answer="data-classes">
+                        Automatic equals, hashCode, toString generation
+                    </div>
+                    <div class="drop-zone" data-answer="when-sealed">
+                        Better readability and exhaustive checking
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuizAnswers(6)">Check Quiz 6 Answers! 🎯</button>
+            <div id="quizResult6"></div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="learning-section" id="finalResults" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-trophy"></i>
+                Quiz Results Summary
+            </h2>
+
+            <div class="completion-stats">
+                <h3>🎓 Your Performance:</h3>
+                <div id="resultsBreakdown"></div>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="btn completion-btn" onclick="resetAllQuizzes()">
+                    <i class="fas fa-redo"></i> Retake All Quizzes
+                </button>
+                <button class="btn" onclick="navigateHome()">
+                    <i class="fas fa-home"></i> Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Quiz Master! 🧠</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let quizScores = [0, 0, 0, 0, 0, 0];
+        let quizzesCompleted = 0;
+        let startTime = Date.now();
+
+        function selectChoice(quizNumber, choice) {
+            const quiz = document.getElementById(`quiz${quizNumber}`);
+            const radio = quiz.querySelector(`input[value="${choice}"]`);
+            radio.checked = true;
+        }
+
+        function checkMultipleChoice(quizNumber, correctAnswer) {
+            const quiz = document.getElementById(`quiz${quizNumber}`);
+            const selected = quiz.querySelector('input[type="radio"]:checked');
+            const resultDiv = document.getElementById(`quizResult${quizNumber}`);
+
+            if (!selected) {
+                resultDiv.innerHTML = `
+                    <div style="background: #fed7d7; color: #e53e3e; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h3>Please select an answer!</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            const isCorrect = selected.value === correctAnswer;
+            quizScores[quizNumber - 1] = isCorrect ? 100 : 0;
+
+            if (isCorrect) {
+                resultDiv.innerHTML = `
+                    <div style="background: #48bb78; color: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h3>🎉 Correct! Great job!</h3>
+                        <p>This code creates a temperature data class that can store either Celsius or Fahrenheit, and automatically converts to Celsius when needed using the Elvis operator and let function.</p>
+                    </div>
+                `;
+                if (quizScores[quizNumber - 1] === 100) {
+                    quizzesCompleted++;
+                    updateQuizStats();
+                    showAchievement(`Quiz ${quizNumber} Perfect! 🎯`);
+                }
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="background: #f56565; color: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h3>Not quite right. Try again!</h3>
+                        <p>Look closely at the <code>inCelsius</code> property - it uses the Elvis operator (?:) to return celsius if it exists, otherwise converts fahrenheit to celsius.</p>
+                    </div>
+                `;
+            }
+
+            checkAllQuizzesCompleted();
+        }
+
+        function updateQuizStats() {
+            const passedQuizzes = quizScores.filter(score => score === 100).length;
+            const averageScore = quizScores.reduce((a, b) => a + b, 0) / quizScores.length;
+            const timeSpent = Math.round((Date.now() - startTime) / 60000);
+
+            document.getElementById('quizzesPassed').textContent = passedQuizzes;
+            document.getElementById('averageScore').textContent = Math.round(averageScore);
+            document.getElementById('timeSpent').textContent = timeSpent;
+            document.getElementById('perfectScores').textContent = passedQuizzes;
+
+            const progress = (passedQuizzes / 6) * 100;
+            document.getElementById('quizProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${passedQuizzes}/6 quizzes completed`;
+        }
+
+        function checkAllQuizzesCompleted() {
+            const passedQuizzes = quizScores.filter(score => score === 100).length;
+            if (passedQuizzes === 6) {
+                showFinalResults();
+                showAchievement('All Quizzes Complete! Kotlin Quiz Master! 🏆');
+            }
+        }
+
+        function showFinalResults() {
+            const resultsDiv = document.getElementById('resultsBreakdown');
+            const passedQuizzes = quizScores.filter(score => score === 100).length;
+            const averageScore = Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length);
+
+            resultsDiv.innerHTML = `
+                <div class="skills-grid">
+                    <div class="skill-badge">Quizzes Passed: ${passedQuizzes}/6</div>
+                    <div class="skill-badge">Average Score: ${averageScore}%</div>
+                    <div class="skill-badge">Perfect Scores: ${passedQuizzes}</div>
+                    <div class="skill-badge">Time: ${Math.round((Date.now() - startTime) / 60000)} min</div>
+                </div>
+                <div style="margin: 20px 0; text-align: center;">
+                    <h3 style="color: #48bb78;">🎉 Congratulations!</h3>
+                    <p>You've mastered the Kotlin fundamentals! You're ready to build amazing Android apps!</p>
+                </div>
+            `;
+
+            document.getElementById('finalResults').style.display = 'block';
+            document.getElementById('finalResults').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetAllQuizzes() {
+            quizScores = [0, 0, 0, 0, 0, 0];
+            quizzesCompleted = 0;
+            startTime = Date.now();
+
+            // Reset all quiz results
+            for (let i = 1; i <= 6; i++) {
+                const resultDiv = document.getElementById(`quizResult${i}`);
+                if (resultDiv) resultDiv.innerHTML = '';
+            }
+
+            // Reset all drag and drop
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.style.backgroundColor = '';
+                zone.style.borderColor = '';
+                const draggedItem = zone.querySelector('.drag-item');
+                if (draggedItem) {
+                    zone.removeChild(draggedItem);
+                }
+            });
+
+            // Reset multiple choice
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+
+            updateQuizStats();
+            document.getElementById('finalResults').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Override the checkQuizAnswers function for the quiz page
+        function checkQuizAnswers(quizNumber) {
+            const dropZones = document.querySelectorAll(`.quiz-section:nth-of-type(${quizNumber + 1}) .drop-zone`);
+            let correct = 0;
+            let total = 0;
+
+            dropZones.forEach(zone => {
+                const expectedAnswer = zone.dataset.answer;
+                const draggedItem = zone.querySelector('.drag-item');
+
+                if (draggedItem) {
+                    total++;
+                    const actualAnswer = draggedItem.dataset.concept;
+
+                    if (expectedAnswer === actualAnswer) {
+                        correct++;
+                        zone.style.backgroundColor = 'rgba(72, 187, 120, 0.3)';
+                        zone.style.borderColor = '#48bb78';
+                    } else {
+                        zone.style.backgroundColor = 'rgba(245, 101, 101, 0.3)';
+                        zone.style.borderColor = '#f56565';
+                    }
+                }
+            });
+
+            const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+            const resultDiv = document.getElementById(`quizResult${quizNumber}`);
+            quizScores[quizNumber - 1] = percentage;
+
+            if (percentage === 100) {
+                resultDiv.innerHTML = `
+                    <div style="background: #48bb78; color: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h3>🎉 Perfect Score! ${correct}/${total} correct!</h3>
+                        <p>Excellent! You've mastered this topic! 🚀</p>
+                    </div>
+                `;
+                if (percentage === 100 && quizScores[quizNumber - 1] !== 100) {
+                    quizzesCompleted++;
+                    showAchievement(`Quiz ${quizNumber} Perfect! 🎯`);
+                }
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="background: #f56565; color: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h3>Good try! ${correct}/${total} correct (${percentage}%)</h3>
+                        <p>Review the concepts and try again! 💪</p>
+                    </div>
+                `;
+            }
+
+            updateQuizStats();
+            checkAllQuizzesCompleted();
+        }
+
+        // Add multiple choice styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .multiple-choice {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 10px;
+                margin: 20px 0;
+            }
+            
+            .choice-option {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 15px;
+                margin: 10px 0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .choice-option:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateX(5px);
+            }
+            
+            .choice-option input[type="radio"] {
+                margin: 0;
+            }
+            
+            .choice-option label {
+                cursor: pointer;
+                flex: 1;
+                font-size: 1.1em;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        updateQuizStats();
+    </script>
+</body>
+
+</html>

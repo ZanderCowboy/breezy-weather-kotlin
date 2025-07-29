@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Extension Functions - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-magic"></i> Chapter 4: Extension Functions</h1>
+            <p>Kotlin's superpower - adding methods to existing classes without inheritance</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="chapterProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/5 sections completed</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                What are Extension Functions?
+            </h2>
+
+            <p>Extension functions are Kotlin's superpower that allows you to add new functions to existing classes
+                without modifying their source code or using inheritance. It's like giving superpowers to classes you
+                don't own! 🦸‍♂️</p>
+
+            <div class="concept-card" onclick="completeSection('extension-basics')">
+                <h4><i class="fas fa-play-circle"></i> Core Concept: Extending Without Inheriting</h4>
+                <p>Learn how to add methods to existing classes like magic</p>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-plus-circle"></i> Extension Magic: A.D.D</h4>
+                <p><strong>A</strong>dd functions to existing classes</p>
+                <p><strong>D</strong>on't modify original source code</p>
+                <p><strong>D</strong>ot notation just like regular methods</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('before-after')">Before vs After</button>
+                    <button class="tab-btn" onclick="switchTab('how-it-works')">How It Works</button>
+                    <button class="tab-btn" onclick="switchTab('benefits')">Benefits</button>
+                </div>
+
+                <div class="tab-content active" id="before-after">
+                    <h3>🔄 Before vs After Extension Functions</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="background: #fed7d7; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #e53e3e;">❌ Without Extensions</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre
+                                    style="font-size: 0.8em;"><span class="kotlin-comment">// Utility class approach</span>
+<span class="kotlin-keyword">object</span> <span class="kotlin-type">StringUtils</span> {
+    <span class="kotlin-keyword">fun</span> isPalindrome(<span class="kotlin-keyword">str</span>: <span class="kotlin-type">String</span>): <span class="kotlin-type">Boolean</span> {
+        <span class="kotlin-keyword">return</span> str == str.reversed()
+    }
+}
+
+<span class="kotlin-comment">// Usage - not intuitive</span>
+<span class="kotlin-keyword">val</span> result = <span class="kotlin-type">StringUtils</span>.isPalindrome(<span class="kotlin-string">"racecar"</span>)</pre>
+                            </div>
+                            <ul style="color: #e53e3e; font-size: 0.9em;">
+                                <li>Utility classes everywhere</li>
+                                <li>Not intuitive to use</li>
+                                <li>Scattered functionality</li>
+                                <li>Hard to discover</li>
+                            </ul>
+                        </div>
+                        <div style="background: #e6fffa; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #38a169;">✅ With Extensions</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-comment">// Extension function</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.isPalindrome(): <span class="kotlin-type">Boolean</span> {
+    <span class="kotlin-keyword">return</span> <span class="kotlin-keyword">this</span> == <span class="kotlin-keyword">this</span>.reversed()
+}
+
+<span class="kotlin-comment">// Usage - natural and intuitive</span>
+<span class="kotlin-keyword">val</span> result = <span class="kotlin-string">"racecar"</span>.isPalindrome()</pre>
+                            </div>
+                            <ul style="color: #38a169; font-size: 0.9em;">
+                                <li>Natural dot notation</li>
+                                <li>Intuitive to use</li>
+                                <li>Functions close to data</li>
+                                <li>Great IDE discoverability</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="how-it-works">
+                    <h3>⚙️ How Extension Functions Work</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: #4299e1;">🎭 Behind the Scenes:</h4>
+                        <ol style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Compile Time:</strong> Kotlin converts extensions to static functions</li>
+                            <li><strong>Receiver Type:</strong> The class being extended becomes the first parameter
+                            </li>
+                            <li><strong>This Reference:</strong> Inside the function, 'this' refers to the receiver
+                                object</li>
+                            <li><strong>No Inheritance:</strong> No actual modification of the original class</li>
+                        </ol>
+                    </div>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// What you write</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.addExclamation(): <span class="kotlin-type">String</span> {
+    <span class="kotlin-keyword">return</span> <span class="kotlin-keyword">this</span> + <span class="kotlin-string">"!"</span>
+}
+
+<span class="kotlin-comment">// What Kotlin generates (simplified)</span>
+<span class="kotlin-keyword">public static</span> <span class="kotlin-type">String</span> addExclamation(<span class="kotlin-type">String</span> receiver) {
+    <span class="kotlin-keyword">return</span> receiver + <span class="kotlin-string">"!"</span>;
+}</pre>
+                    </div>
+                    <p><strong>Key Point:</strong> Extensions are resolved statically - no virtual dispatch!</p>
+                </div>
+
+                <div class="tab-content" id="benefits">
+                    <h3>✨ Benefits of Extension Functions</h3>
+                    <div
+                        style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #38a169;">
+                        <h4 style="color: #38a169;">✅ Advantages:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Readability:</strong> More natural, fluent API</li>
+                            <li><strong>Discoverability:</strong> IDE shows them as methods</li>
+                            <li><strong>No Inheritance:</strong> Works with final classes</li>
+                            <li><strong>Modularity:</strong> Keep related functions together</li>
+                            <li><strong>Chain-able:</strong> Perfect for fluent interfaces</li>
+                            <li><strong>Null-safe:</strong> Extensions respect nullable types</li>
+                        </ul>
+                    </div>
+                    <div
+                        style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #ed8936;">
+                        <h4 style="color: #ed8936;">⚠️ Limitations:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>No Access to Private:</strong> Can't access private members</li>
+                            <li><strong>Static Resolution:</strong> No polymorphism with extensions</li>
+                            <li><strong>Import Required:</strong> Must be imported to use</li>
+                            <li><strong>No Override:</strong> Can't override in subclasses</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-calendar-alt"></i>
+                Real Code: Date Extensions
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('date-extensions')">
+                <h4><i class="fas fa-play-circle"></i> Explore Date Formatting Extensions</h4>
+                <p>See how BreezyWeather extends Date for weather-specific formatting</p>
+            </div>
+
+            <div class="file-explore-card">
+                <h4><i class="fas fa-folder-open"></i> Extension Files to Explore:</h4>
+                <ul>
+                    <li><code>app/src/main/java/org/breezyweather/common/extensions/DateExtensions.kt</code> - Date
+                        formatting</li>
+                    <li><code>app/src/main/java/org/breezyweather/common/extensions/ContextExtensions.kt</code> -
+                        Android context helpers</li>
+                    <li><code>app/src/main/java/org/breezyweather/common/extensions/NumberExtensions.kt</code> - Number
+                        utilities</li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// From DateExtensions.kt - Weather-specific date formatting</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Date</span>.getFormattedTime(
+    location: <span class="kotlin-type">Location?</span> = <span class="kotlin-keyword">null</span>,
+    context: <span class="kotlin-type">Context?</span>,
+    twelveHour: <span class="kotlin-type">Boolean</span>,
+): <span class="kotlin-type">String</span> {
+    <span class="kotlin-keyword">return if</span> (twelveHour) {
+        <span class="kotlin-keyword">this</span>.getFormattedDate(<span class="kotlin-string">"h:mm aa"</span>, location, context)
+    } <span class="kotlin-keyword">else</span> {
+        <span class="kotlin-keyword">this</span>.getFormattedDate(<span class="kotlin-string">"HH:mm"</span>, location, context)
+    }
+}
+
+<span class="kotlin-comment">// Weather-specific day formatting</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Date</span>.getFormattedDay(
+    context: <span class="kotlin-type">Context</span>,
+    location: <span class="kotlin-type">Location?</span> = <span class="kotlin-keyword">null</span>
+): <span class="kotlin-type">String</span> {
+    <span class="kotlin-keyword">val</span> today = <span class="kotlin-type">Calendar</span>.getInstance()
+    <span class="kotlin-keyword">val</span> tomorrow = <span class="kotlin-type">Calendar</span>.getInstance().apply { 
+        add(<span class="kotlin-type">Calendar</span>.DAY_OF_YEAR, <span class="kotlin-string">1</span>) 
+    }
+    <span class="kotlin-keyword">val</span> dateCalendar = <span class="kotlin-type">Calendar</span>.getInstance().apply { 
+        time = <span class="kotlin-keyword">this</span>@getFormattedDay 
+    }
+
+    <span class="kotlin-keyword">return when</span> {
+        isSameDay(today, dateCalendar) -> context.getString(<span class="kotlin-type">R</span>.string.today)
+        isSameDay(tomorrow, dateCalendar) -> context.getString(<span class="kotlin-type">R</span>.string.tomorrow)
+        <span class="kotlin-keyword">else</span> -> getFormattedDate(<span class="kotlin-string">"EEEE"</span>, location, context)
+    }
+}
+
+<span class="kotlin-comment">// Relative time for weather updates</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Date</span>.getRelativeTimeString(context: <span class="kotlin-type">Context</span>): <span class="kotlin-type">String</span> {
+    <span class="kotlin-keyword">val</span> now = <span class="kotlin-type">System</span>.currentTimeMillis()
+    <span class="kotlin-keyword">val</span> diff = now - <span class="kotlin-keyword">this</span>.time
+    
+    <span class="kotlin-keyword">return when</span> {
+        diff < <span class="kotlin-string">60_000</span> -> context.getString(<span class="kotlin-type">R</span>.string.just_now)
+        diff < <span class="kotlin-string">3600_000</span> -> context.getString(
+            <span class="kotlin-type">R</span>.string.minutes_ago, 
+            diff / <span class="kotlin-string">60_000</span>
+        )
+        <span class="kotlin-keyword">else</span> -> getFormattedTime(<span class="kotlin-keyword">null</span>, context, context.is12Hour)
+    }
+}</pre>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('extension-anatomy')">Extension Anatomy</button>
+                    <button class="tab-btn" onclick="switchTab('parameter-handling')">Parameter Handling</button>
+                    <button class="tab-btn" onclick="switchTab('chaining')">Function Chaining</button>
+                </div>
+
+                <div class="tab-content active" id="extension-anatomy">
+                    <h3>🔬 Extension Function Anatomy</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #4299e1;">📝 Parts of an Extension Function:</h4>
+                        <div class="code-example">
+                            <pre
+                                style="margin: 15px 0;"><span class="kotlin-keyword">fun</span> <span style="background: #ffd700; color: #333; padding: 2px 4px; border-radius: 3px;">Date</span>.<span style="background: #4299e1; color: white; padding: 2px 4px; border-radius: 3px;">getFormattedTime</span>(<span style="background: #38a169; color: white; padding: 2px 4px; border-radius: 3px;">location: Location?</span>): <span style="background: #e53e3e; color: white; padding: 2px 4px; border-radius: 3px;">String</span></pre>
+                        </div>
+                        <ul style="color: #4a5568; line-height: 1.8; margin-top: 15px;">
+                            <li><span
+                                    style="background: #ffd700; color: #333; padding: 2px 4px; border-radius: 3px; font-weight: bold;">Date</span>
+                                - <strong>Receiver Type:</strong> The class we're extending</li>
+                            <li><span
+                                    style="background: #4299e1; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;">getFormattedTime</span>
+                                - <strong>Function Name:</strong> What we're adding</li>
+                            <li><span
+                                    style="background: #38a169; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;">location:
+                                    Location?</span> - <strong>Parameters:</strong> Additional inputs</li>
+                            <li><span
+                                    style="background: #e53e3e; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;">String</span>
+                                - <strong>Return Type:</strong> What we get back</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="parameter-handling">
+                    <h3>🔧 Smart Parameter Handling</h3>
+                    <p>Extensions can have default parameters, nullable types, and more:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Default parameters work great with extensions</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Date</span>.getFormattedTime(
+    location: <span class="kotlin-type">Location?</span> = <span class="kotlin-keyword">null</span>, <span class="kotlin-comment">// Optional location</span>
+    context: <span class="kotlin-type">Context?</span>,             <span class="kotlin-comment">// Nullable context</span>
+    twelveHour: <span class="kotlin-type">Boolean</span>,            <span class="kotlin-comment">// Required parameter</span>
+): <span class="kotlin-type">String</span>
+
+<span class="kotlin-comment">// Usage with named parameters</span>
+<span class="kotlin-keyword">val</span> time1 = <span class="kotlin-type">Date</span>().getFormattedTime(
+    context = <span class="kotlin-keyword">this</span>, 
+    twelveHour = <span class="kotlin-keyword">true</span>
+)
+
+<span class="kotlin-keyword">val</span> time2 = <span class="kotlin-type">Date</span>().getFormattedTime(
+    location = currentLocation,
+    context = <span class="kotlin-keyword">this</span>,
+    twelveHour = <span class="kotlin-keyword">false</span>
+)</pre>
+                    </div>
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p style="color: #38a169; margin: 0;"><strong>💡 Pro Tip:</strong> Use default parameters to
+                            make extensions more flexible and easier to use!</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="chaining">
+                    <h3>🔗 Function Chaining</h3>
+                    <p>Extensions enable beautiful fluent APIs through chaining:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Chainable string extensions</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.removeSpaces(): <span class="kotlin-type">String</span> = <span class="kotlin-keyword">this</span>.replace(<span class="kotlin-string">" "</span>, <span class="kotlin-string">""</span>)
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.capitalizeWords(): <span class="kotlin-type">String</span> = <span class="kotlin-keyword">this</span>.split(<span class="kotlin-string">" "</span>).joinToString(<span class="kotlin-string">" "</span>) { 
+    it.capitalize() 
+}
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.addEmoji(emoji: <span class="kotlin-type">String</span>): <span class="kotlin-type">String</span> = <span class="kotlin-string">"$emoji $this $emoji"</span>
+
+<span class="kotlin-comment">// Beautiful fluent usage</span>
+<span class="kotlin-keyword">val</span> formatted = <span class="kotlin-string">"hello world"</span>
+    .capitalizeWords()     <span class="kotlin-comment">// "Hello World"</span>
+    .addEmoji(<span class="kotlin-string">"🌍"</span>)        <span class="kotlin-comment">// "🌍 Hello World 🌍"</span>
+    .removeSpaces()        <span class="kotlin-comment">// "🌍HelloWorld🌍"</span>
+
+<span class="kotlin-comment">// Weather-specific chaining</span>
+<span class="kotlin-keyword">val</span> weatherTime = <span class="kotlin-type">Date</span>()
+    .getFormattedTime(context = <span class="kotlin-keyword">this</span>, twelveHour = <span class="kotlin-keyword">true</span>)
+    .addEmoji(<span class="kotlin-string">"⏰"</span>)</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-mobile-alt"></i>
+                Real Code: Android Context Extensions
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('context-extensions')">
+                <h4><i class="fas fa-play-circle"></i> Explore Android Extensions</h4>
+                <p>See how extensions make Android development easier</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// From ContextExtensions.kt - Android-specific extensions</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Context</span>.hasPermission(permission: <span class="kotlin-type">String</span>): <span class="kotlin-type">Boolean</span> = 
+    <span class="kotlin-type">ContextCompat</span>.checkSelfPermission(<span class="kotlin-keyword">this</span>, permission) == 
+    <span class="kotlin-type">PackageManager</span>.PERMISSION_GRANTED
+
+<span class="kotlin-comment">// Check if device uses 12-hour time format</span>
+<span class="kotlin-keyword">val</span> <span class="kotlin-type">Context</span>.is12Hour: <span class="kotlin-type">Boolean</span>
+    <span class="kotlin-keyword">get</span>() = !<span class="kotlin-type">DateFormat</span>.is24HourFormat(<span class="kotlin-keyword">this</span>)
+
+<span class="kotlin-comment">// Get screen width in pixels</span>
+<span class="kotlin-keyword">val</span> <span class="kotlin-type">Context</span>.screenWidth: <span class="kotlin-type">Int</span>
+    <span class="kotlin-keyword">get</span>() = resources.displayMetrics.widthPixels
+
+<span class="kotlin-comment">// Convert dp to pixels</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Context</span>.dpToPx(<span class="kotlin-keyword">dp</span>: <span class="kotlin-type">Float</span>): <span class="kotlin-type">Float</span> = 
+    dp * resources.displayMetrics.density
+
+<span class="kotlin-comment">// Show toast with extension</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Context</span>.toast(message: <span class="kotlin-type">String</span>, length: <span class="kotlin-type">Int</span> = <span class="kotlin-type">Toast</span>.LENGTH_SHORT) {
+    <span class="kotlin-type">Toast</span>.makeText(<span class="kotlin-keyword">this</span>, message, length).show()
+}
+
+<span class="kotlin-comment">// Usage examples - so much cleaner!</span>
+<span class="kotlin-keyword">if</span> (hasPermission(<span class="kotlin-type">Manifest</span>.permission.ACCESS_FINE_LOCATION)) {
+    <span class="kotlin-comment">// Get location</span>
+}
+
+<span class="kotlin-keyword">val</span> timeFormat = <span class="kotlin-keyword">if</span> (is12Hour) <span class="kotlin-string">"h:mm aa"</span> <span class="kotlin-keyword">else</span> <span class="kotlin-string">"HH:mm"</span>
+<span class="kotlin-keyword">val</span> buttonWidth = dpToPx(<span class="kotlin-string">100f</span>)
+toast(<span class="kotlin-string">"Weather updated!"</span>)</pre>
+            </div>
+
+            <div style="background: #fffaf0; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #ed8936;"><i class="fas fa-lightbulb"></i> Extension Properties!</h4>
+                <p style="color: #4a5568; margin: 10px 0;">Notice <code>val Context.is12Hour</code> - you can create
+                    extension <strong>properties</strong> too! They work just like functions but look like properties.
+                </p>
+                <div class="code-example">
+                    <pre><span class="kotlin-comment">// Extension property with custom getter</span>
+<span class="kotlin-keyword">val</span> <span class="kotlin-type">Context</span>.isDarkMode: <span class="kotlin-type">Boolean</span>
+    <span class="kotlin-keyword">get</span>() = resources.configuration.uiMode and 
+        <span class="kotlin-type">Configuration</span>.UI_MODE_NIGHT_MASK == 
+        <span class="kotlin-type">Configuration</span>.UI_MODE_NIGHT_YES</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-wrench"></i>
+                Creating Your Own Extensions
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('custom-extensions')">
+                <h4><i class="fas fa-play-circle"></i> Build Custom Extensions</h4>
+                <p>Learn to create powerful extensions for your projects</p>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// Weather-specific extensions you could create</span>
+
+<span class="kotlin-comment">// Temperature conversion extensions</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Double</span>.celsiusToFahrenheit(): <span class="kotlin-type">Double</span> = (<span class="kotlin-keyword">this</span> * <span class="kotlin-string">9</span> / <span class="kotlin-string">5</span>) + <span class="kotlin-string">32</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">Double</span>.fahrenheitToCelsius(): <span class="kotlin-type">Double</span> = (<span class="kotlin-keyword">this</span> - <span class="kotlin-string">32</span>) * <span class="kotlin-string">5</span> / <span class="kotlin-string">9</span>
+
+<span class="kotlin-comment">// String validation extensions</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.isValidEmail(): <span class="kotlin-type">Boolean</span> = 
+    <span class="kotlin-type">Patterns</span>.EMAIL_ADDRESS.matcher(<span class="kotlin-keyword">this</span>).matches()
+
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">String</span>.isValidZipCode(): <span class="kotlin-type">Boolean</span> = 
+    <span class="kotlin-keyword">this</span>.matches(<span class="kotlin-type">Regex</span>(<span class="kotlin-string">"\\d{5}(-\\d{4})?"</span>))
+
+<span class="kotlin-comment">// Collection extensions for weather data</span>
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">List&lt;Double&gt;</span>.average(): <span class="kotlin-type">Double</span> = <span class="kotlin-keyword">this</span>.sum() / <span class="kotlin-keyword">this</span>.size
+<span class="kotlin-keyword">fun</span> <span class="kotlin-type">List&lt;Double&gt;</span>.temperatureRange(): <span class="kotlin-type">String</span> = 
+    <span class="kotlin-string">"${this.minOrNull()?.toInt()}° - ${this.maxOrNull()?.toInt()}°"</span>
+
+<span class="kotlin-comment">// Usage examples</span>
+<span class="kotlin-keyword">val</span> temp = <span class="kotlin-string">25.0</span>.celsiusToFahrenheit() <span class="kotlin-comment">// 77.0</span>
+<span class="kotlin-keyword">val</span> isValid = <span class="kotlin-string">"user@example.com"</span>.isValidEmail() <span class="kotlin-comment">// true</span>
+<span class="kotlin-keyword">val</span> range = listOf(<span class="kotlin-string">22.0</span>, <span class="kotlin-string">28.0</span>, <span class="kotlin-string">25.0</span>).temperatureRange() <span class="kotlin-comment">// "22° - 28°"</span></pre>
+            </div>
+
+            <div style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #38a169;"><i class="fas fa-star"></i> Extension Best Practices</h4>
+                <ul style="color: #4a5568; line-height: 1.8;">
+                    <li><strong>Keep it simple:</strong> One clear responsibility per extension</li>
+                    <li><strong>Use meaningful names:</strong> Make the purpose obvious</li>
+                    <li><strong>Consider nullability:</strong> Handle nullable receivers properly</li>
+                    <li><strong>Import wisely:</strong> Group related extensions in files</li>
+                    <li><strong>Document well:</strong> Add KDoc for complex extensions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Practice: Extension Function Quiz
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('practice')">
+                <h4><i class="fas fa-play-circle"></i> Test Your Extension Knowledge</h4>
+                <p>Match extension concepts with their benefits</p>
+            </div>
+
+            <div class="quiz-section">
+                <h3><i class="fas fa-brain"></i> Extension Function Quiz</h3>
+                <p>Drag and match the extension concepts!</p>
+
+                <div class="drag-drop-area">
+                    <div>
+                        <h4>Concepts</h4>
+                        <div class="drag-item" draggable="true" data-concept="receiver-type">Receiver Type</div>
+                        <div class="drag-item" draggable="true" data-concept="this-reference">this reference</div>
+                        <div class="drag-item" draggable="true" data-concept="static-resolution">Static Resolution</div>
+                        <div class="drag-item" draggable="true" data-concept="extension-property">Extension Property
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Descriptions</h4>
+                        <div class="drop-zone" data-answer="receiver-type">
+                            The class being extended with new functionality
+                        </div>
+                        <div class="drop-zone" data-answer="this-reference">
+                            Refers to the instance of the extended class
+                        </div>
+                        <div class="drop-zone" data-answer="static-resolution">
+                            Extensions are resolved at compile time, not runtime
+                        </div>
+                        <div class="drop-zone" data-answer="extension-property">
+                            Property-like extension with custom getter/setter
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="checkQuizAnswers(4)">Check My Answers! 🎯</button>
+                <div id="quizResult4"></div>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Chapter 4 Summary</h4>
+                <p><strong>🦸‍♂️ Extension Functions:</strong> Add superpowers to existing classes</p>
+                <p><strong>🎯 Receiver Type:</strong> The class you're extending (before the dot)</p>
+                <p><strong>🔗 This Reference:</strong> Refers to the instance being extended</p>
+                <p><strong>⚡ Static Resolution:</strong> Resolved at compile time for performance</p>
+                <p><strong>📦 Extension Properties:</strong> Property-like extensions with getters</p>
+                <p><strong>🔧 Best Practice:</strong> Simple, focused, well-named extensions</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+                <button class="btn" onclick="navigateToChapter('chapter3.html')">
+                    <i class="fas fa-arrow-left"></i> Previous: Enum Classes
+                </button>
+                <button class="btn" onclick="navigateToChapter('chapter5.html')">
+                    Next: Interfaces & Abstractions <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Extension Function Wizard! 🪄</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let sectionsCompleted = 0;
+        const totalSections = 5;
+
+        function completeSection(sectionName) {
+            if (sectionsCompleted < totalSections) {
+                sectionsCompleted++;
+                updateChapterProgress(4, sectionsCompleted, totalSections);
+                updateProgressBar();
+
+                if (typeof learnConcept === 'function') {
+                    learnConcept('extensions');
+                }
+
+                if (sectionsCompleted === totalSections) {
+                    showAchievement('Chapter 4 Complete! Extension Function Master! 🪄');
+                }
+            }
+        }
+
+        function updateProgressBar() {
+            const percentage = (sectionsCompleted / totalSections) * 100;
+            document.getElementById('chapterProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${sectionsCompleted}/${totalSections} sections completed`;
+        }
+
+        // Initialize progress
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProgressBar();
+        });
+    </script>
+</body>
+
+</html>

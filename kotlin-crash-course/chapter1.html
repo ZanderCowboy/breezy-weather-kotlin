@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: Application Classes - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-mobile-alt"></i> Chapter 1: Application Classes</h1>
+            <p>Understanding Android app entry points and dependency injection with Hilt</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="chapterProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/3 sections completed</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                What is an Application Class?
+            </h2>
+
+            <p>The Application class is like the <strong>main entrance</strong> to your Android app. It's the very first
+                thing that gets created when your app starts up, even before any activities, services, or other
+                components. Think of it as the master key holder and setup manager for your entire application!</p>
+
+            <div class="concept-card" onclick="completeSection('app-basics')">
+                <h4><i class="fas fa-play-circle"></i> Core Concept: Application Lifecycle</h4>
+                <p>Click to understand how the Application class fits into Android's lifecycle</p>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-lightbulb"></i> Memory Trick: A.P.P</h4>
+                <p><strong>A</strong>lways runs first - before any other component</p>
+                <p><strong>P</strong>ersists throughout app lifetime - lives as long as your app</p>
+                <p><strong>P</strong>erfect for global setup - initialization, configuration, DI</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('lifecycle')">App Lifecycle</button>
+                    <button class="tab-btn" onclick="switchTab('use-cases')">Common Use Cases</button>
+                    <button class="tab-btn" onclick="switchTab('best-practices')">Best Practices</button>
+                </div>
+
+                <div class="tab-content active" id="lifecycle">
+                    <h3>📱 Android Application Lifecycle</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <ol style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>App Launch:</strong> Application.onCreate() is called first</li>
+                            <li><strong>Component Creation:</strong> Activities, Services, etc. are created</li>
+                            <li><strong>App Running:</strong> Application instance stays alive</li>
+                            <li><strong>Memory Pressure:</strong> Components may be destroyed, Application stays</li>
+                            <li><strong>App Termination:</strong> Application.onTerminate() (rarely called)</li>
+                        </ol>
+                    </div>
+                    <p><strong>Key Point:</strong> The Application class has the longest lifecycle in your app!</p>
+                </div>
+
+                <div class="tab-content" id="use-cases">
+                    <h3>🛠️ Common Use Cases</h3>
+                    <ul style="color: #4a5568; line-height: 1.8;">
+                        <li><strong>Dependency Injection Setup:</strong> Initialize DI frameworks like Hilt/Dagger</li>
+                        <li><strong>Global Configuration:</strong> Set up crash reporting, analytics, logging</li>
+                        <li><strong>Database Initialization:</strong> Set up Room database, migrations</li>
+                        <li><strong>Network Configuration:</strong> Initialize HTTP clients, base URLs</li>
+                        <li><strong>Theme/Night Mode:</strong> Apply app-wide theme settings</li>
+                        <li><strong>Memory Management:</strong> Track memory usage, clear caches</li>
+                    </ul>
+                </div>
+
+                <div class="tab-content" id="best-practices">
+                    <h3>✅ Best Practices</h3>
+                    <div
+                        style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #38a169;">
+                        <h4 style="color: #38a169; margin-bottom: 10px;">DO:</h4>
+                        <ul style="color: #4a5568;">
+                            <li>Keep onCreate() lightweight and fast</li>
+                            <li>Use it for global, app-wide initialization</li>
+                            <li>Initialize dependency injection here</li>
+                            <li>Set up crash reporting and analytics</li>
+                        </ul>
+                    </div>
+                    <div
+                        style="background: #fed7d7; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #e53e3e;">
+                        <h4 style="color: #e53e3e; margin-bottom: 10px;">DON'T:</h4>
+                        <ul style="color: #4a5568;">
+                            <li>Perform heavy operations in onCreate()</li>
+                            <li>Start long-running background tasks</li>
+                            <li>Store context references that could leak</li>
+                            <li>Rely on onTerminate() being called</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i>
+                Real Code: BreezyWeather Application
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('real-code')">
+                <h4><i class="fas fa-play-circle"></i> Explore Real Implementation</h4>
+                <p>Let's dive into the actual BreezyWeather Application class</p>
+            </div>
+
+            <div class="file-explore-card">
+                <h4><i class="fas fa-folder-open"></i> Files to Explore:</h4>
+                <ul>
+                    <li><code>app/src/main/java/org/breezyweather/BreezyWeather.kt</code> - Main Application class</li>
+                    <li><code>app/src/main/java/org/breezyweather/Migrations.kt</code> - Database migrations</li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// From BreezyWeather.kt - The main Application class</span>
+<span class="kotlin-keyword">@HiltAndroidApp</span> <span class="kotlin-comment">// 🎯 Enables Hilt dependency injection</span>
+<span class="kotlin-keyword">class</span> <span class="kotlin-type">BreezyWeather</span> : <span class="kotlin-type">Application</span>(), <span class="kotlin-type">Configuration.Provider</span> {
+    
+    <span class="kotlin-keyword">companion object</span> { <span class="kotlin-comment">// 📦 Static members</span>
+        <span class="kotlin-keyword">lateinit var</span> instance: <span class="kotlin-type">BreezyWeather</span>
+            <span class="kotlin-keyword">private set</span> <span class="kotlin-comment">// Read-only from outside</span>
+    }
+
+    <span class="kotlin-comment">// 🏃‍♂️ Lazy initialization - created only when first accessed</span>
+    <span class="kotlin-keyword">private val</span> activitySet: <span class="kotlin-type">MutableSet&lt;GeoActivity&gt;</span> <span class="kotlin-keyword">by lazy</span> {
+        <span class="kotlin-type">HashSet</span>()
+    }
+
+    <span class="kotlin-keyword">override fun</span> onCreate() { <span class="kotlin-comment">// 🚀 App startup entry point</span>
+        <span class="kotlin-keyword">super</span>.onCreate()
+        instance = <span class="kotlin-keyword">this</span> <span class="kotlin-comment">// Store global reference</span>
+        
+        <span class="kotlin-comment">// 🔧 Setup app-wide configurations</span>
+        setupNotificationChannels()
+        setDayNightMode() 
+        setupCrashReporting()
+    }
+
+    <span class="kotlin-comment">// 🌙 Dynamic theme switching</span>
+    <span class="kotlin-keyword">private fun</span> setDayNightMode() {
+        <span class="kotlin-keyword">val</span> settings = <span class="kotlin-type">SettingsManager</span>.getInstance(<span class="kotlin-keyword">this</span>)
+        <span class="kotlin-type">AppCompatDelegate</span>.setDefaultNightMode(
+            <span class="kotlin-keyword">when</span> (settings.darkMode) {
+                <span class="kotlin-type">DarkMode</span>.AUTO -> <span class="kotlin-type">MODE_NIGHT_FOLLOW_SYSTEM</span>
+                <span class="kotlin-type">DarkMode</span>.LIGHT -> <span class="kotlin-type">MODE_NIGHT_NO</span>
+                <span class="kotlin-type">DarkMode</span>.DARK -> <span class="kotlin-type">MODE_NIGHT_YES</span>
+            }
+        )
+    }
+}</pre>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('code-breakdown')">Code Breakdown</button>
+                    <button class="tab-btn" onclick="switchTab('hilt-deep-dive')">Hilt Deep Dive</button>
+                    <button class="tab-btn" onclick="switchTab('companion-objects')">Companion Objects</button>
+                </div>
+
+                <div class="tab-content active" id="code-breakdown">
+                    <h3>🔍 Line-by-Line Breakdown</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><code>@HiltAndroidApp</code> - Magic annotation that sets up dependency injection for
+                                the entire app 🎯</li>
+                            <li><code>: Application()</code> - Inheriting from Android's Application class</li>
+                            <li><code>Configuration.Provider</code> - Interface for WorkManager configuration</li>
+                            <li><code>companion object</code> - Kotlin's way of creating static members (like Java's
+                                static)</li>
+                            <li><code>lateinit var</code> - "I promise to initialize this before using it!" 🤝</li>
+                            <li><code>by lazy</code> - Lazy loading - creates object only when first accessed</li>
+                            <li><code>override fun onCreate()</code> - The entry point when app starts</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="hilt-deep-dive">
+                    <h3>🔧 Hilt Dependency Injection</h3>
+                    <p>Hilt is Android's recommended dependency injection library. Here's what happens:</p>
+                    <div style="background: #e6fffa; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #38a169;">What @HiltAndroidApp does:</h4>
+                        <ol style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Generates DI code:</strong> Creates Hilt components at compile time</li>
+                            <li><strong>Sets up object graph:</strong> Manages how objects are created and shared</li>
+                            <li><strong>Enables injection:</strong> Allows @Inject annotations throughout app</li>
+                            <li><strong>Lifecycle management:</strong> Automatically handles object lifecycles</li>
+                        </ol>
+                    </div>
+                    <p><strong>Benefits:</strong> No more manual object creation, easier testing, cleaner code!</p>
+                </div>
+
+                <div class="tab-content" id="companion-objects">
+                    <h3>👥 Companion Objects Explained</h3>
+                    <p>Companion objects are Kotlin's elegant solution to static members:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-keyword">companion object</span> {
+    <span class="kotlin-keyword">lateinit var</span> instance: <span class="kotlin-type">BreezyWeather</span>
+        <span class="kotlin-keyword">private set</span> <span class="kotlin-comment">// Only this class can modify it</span>
+        
+    <span class="kotlin-comment">// Can also have functions</span>
+    <span class="kotlin-keyword">fun</span> getAppContext(): <span class="kotlin-type">Context</span> = instance.applicationContext
+}</pre>
+                    </div>
+                    <p><strong>Usage:</strong> <code>BreezyWeather.instance</code> - Access from anywhere in the app!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Practice: Understanding the Concepts
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('practice')">
+                <h4><i class="fas fa-play-circle"></i> Interactive Practice</h4>
+                <p>Test your understanding with these concept questions</p>
+            </div>
+
+            <div class="quiz-section">
+                <h3><i class="fas fa-brain"></i> Quick Knowledge Check</h3>
+                <p>Drag and match the Kotlin Application concepts!</p>
+
+                <div class="drag-drop-area">
+                    <div>
+                        <h4>Concepts</h4>
+                        <div class="drag-item" draggable="true" data-concept="hilt-annotation">@HiltAndroidApp</div>
+                        <div class="drag-item" draggable="true" data-concept="companion">companion object</div>
+                        <div class="drag-item" draggable="true" data-concept="lateinit">lateinit var</div>
+                        <div class="drag-item" draggable="true" data-concept="lazy">by lazy</div>
+                    </div>
+                    <div>
+                        <h4>Descriptions</h4>
+                        <div class="drop-zone" data-answer="hilt-annotation">
+                            Enables dependency injection throughout the app
+                        </div>
+                        <div class="drop-zone" data-answer="companion">
+                            Kotlin's way of creating static members
+                        </div>
+                        <div class="drop-zone" data-answer="lateinit">
+                            Promise to initialize a variable before using it
+                        </div>
+                        <div class="drop-zone" data-answer="lazy">
+                            Deferred initialization until first access
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="checkQuizAnswers(1)">Check My Answers! 🎯</button>
+                <div id="quizResult1"></div>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Chapter Summary</h4>
+                <p><strong>🏗️ Application Class:</strong> The foundation of your Android app</p>
+                <p><strong>🎯 @HiltAndroidApp:</strong> One annotation to rule all dependency injection</p>
+                <p><strong>📦 Companion Objects:</strong> Kotlin's elegant static members</p>
+                <p><strong>⚡ Lazy Loading:</strong> Create objects only when needed</p>
+                <p><strong>🚀 onCreate():</strong> Your app's launch pad for global setup</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+                <button class="btn" onclick="navigateHome()">
+                    <i class="fas fa-home"></i> Back to Home
+                </button>
+                <button class="btn" onclick="navigateToChapter('chapter2.html')">
+                    Next: Data Classes <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Application Master! 📱</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let sectionsCompleted = 0;
+        const totalSections = 3;
+
+        function completeSection(sectionName) {
+            if (sectionsCompleted < totalSections) {
+                sectionsCompleted++;
+                updateChapterProgress(1, sectionsCompleted, totalSections);
+                updateProgressBar();
+
+                if (typeof learnConcept === 'function') {
+                    learnConcept('app-class');
+                }
+
+                if (sectionsCompleted === totalSections) {
+                    showAchievement('Chapter 1 Complete! Android Application Master! 🚀');
+                }
+            }
+        }
+
+        function updateProgressBar() {
+            const percentage = (sectionsCompleted / totalSections) * 100;
+            document.getElementById('chapterProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${sectionsCompleted}/${totalSections} sections completed`;
+        }
+
+        // Initialize progress
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProgressBar();
+        });
+    </script>
+</body>
+
+</html>

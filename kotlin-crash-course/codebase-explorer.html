@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codebase Explorer - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-folder-open"></i> Codebase Explorer</h1>
+            <p>Guided tour through the Breezy Weather Kotlin files</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-map"></i>
+                Project Structure Overview
+            </h2>
+
+            <p>The BreezyWeather app follows modern Android architecture patterns. Let's explore the key directories and
+                files that demonstrate the Kotlin concepts you've learned!</p>
+
+            <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>📁 Main Project Structure</h3>
+                <div class="code-example">
+                    <pre>breezy-weather-kotlin/
+├── 📱 app/                           # Main Android application
+│   ├── src/main/java/org/breezyweather/
+│   │   ├── BreezyWeather.kt         # Application class (Chapter 1)
+│   │   ├── common/extensions/       # Extension functions (Chapter 4)
+│   │   └── ui/                      # User interface components
+│   └── src/main/res/                # Android resources
+├── 🏗️ domain/                        # Business logic & models
+│   └── src/main/java/breezyweather/domain/
+│       └── weather/model/           # Data & Enum classes (Chapters 2 & 3)
+└── 💾 data/                          # Data access layer
+    └── src/main/java/breezyweather/data/
+        ├── DatabaseHandler.kt       # Interface (Chapter 5)
+        └── AndroidDatabaseHandler.kt # Implementation</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="explorer-grid">
+            <div class="explorer-card" onclick="exploreFile('application')">
+                <i class="fas fa-mobile-alt" style="color: #4299e1;"></i>
+                <h4>Application Entry Point</h4>
+                <p>The heart of the Android app with dependency injection</p>
+                <code>app/src/main/java/org/breezyweather/BreezyWeather.kt</code>
+                <div style="margin-top: 15px;">
+                    <span class="tag">@HiltAndroidApp</span>
+                    <span class="tag">companion object</span>
+                    <span class="tag">lateinit</span>
+                </div>
+            </div>
+
+            <div class="explorer-card" onclick="exploreFile('weather-models')">
+                <i class="fas fa-cloud-rain" style="color: #38a169;"></i>
+                <h4>Weather Data Models</h4>
+                <p>Data classes representing weather information</p>
+                <code>domain/src/main/java/breezyweather/domain/weather/model/</code>
+                <div style="margin-top: 15px;">
+                    <span class="tag">data class</span>
+                    <span class="tag">nullable types</span>
+                    <span class="tag">custom getters</span>
+                </div>
+            </div>
+
+            <div class="explorer-card" onclick="exploreFile('weather-enums')">
+                <i class="fas fa-list-alt" style="color: #ed8936;"></i>
+                <h4>Weather Condition Enums</h4>
+                <p>Type-safe constants for weather conditions</p>
+                <code>domain/src/main/java/breezyweather/domain/weather/model/WeatherCode.kt</code>
+                <div style="margin-top: 15px;">
+                    <span class="tag">enum class</span>
+                    <span class="tag">companion object</span>
+                    <span class="tag">pattern matching</span>
+                </div>
+            </div>
+
+            <div class="explorer-card" onclick="exploreFile('extensions')">
+                <i class="fas fa-magic" style="color: #e53e3e;"></i>
+                <h4>Extension Functions</h4>
+                <p>Kotlin superpowers extending existing classes</p>
+                <code>app/src/main/java/org/breezyweather/common/extensions/</code>
+                <div style="margin-top: 15px;">
+                    <span class="tag">extension functions</span>
+                    <span class="tag">receiver types</span>
+                    <span class="tag">utility helpers</span>
+                </div>
+            </div>
+
+            <div class="explorer-card" onclick="exploreFile('database-interface')">
+                <i class="fas fa-database" style="color: #667eea;"></i>
+                <h4>Database Abstractions</h4>
+                <p>Clean interfaces with coroutines and generics</p>
+                <code>data/src/main/java/breezyweather/data/DatabaseHandler.kt</code>
+                <div style="margin-top: 15px;">
+                    <span class="tag">interfaces</span>
+                    <span class="tag">suspend functions</span>
+                    <span class="tag">generics</span>
+                </div>
+            </div>
+
+            <div class="explorer-card" onclick="exploreFile('ui-components')">
+                <i class="fas fa-paint-brush" style="color: #9f7aea;"></i>
+                <h4>UI Components</h4>
+                <p>Android Activities and Fragments</p>
+                <code>app/src/main/java/org/breezyweather/ui/</code>
+                <div style="margin-top: 15px;">
+                    <span class="tag">activities</span>
+                    <span class="tag">fragments</span>
+                    <span class="tag">viewmodels</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section" id="fileDetails" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i>
+                <span id="fileTitle">File Details</span>
+            </h2>
+            <div id="fileContent"></div>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <button class="btn" onclick="navigateHome()">
+                <i class="fas fa-home"></i> Back to Home
+            </button>
+        </div>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function exploreFile(fileType) {
+            const detailsSection = document.getElementById('fileDetails');
+            const titleElement = document.getElementById('fileTitle');
+            const contentElement = document.getElementById('fileContent');
+
+            detailsSection.style.display = 'block';
+
+            switch (fileType) {
+                case 'application':
+                    titleElement.textContent = 'Application Entry Point';
+                    contentElement.innerHTML = `
+                        <p>The BreezyWeather.kt file is the main Application class that serves as the entry point for the entire Android app.</p>
+                        
+                        <h4>🎯 Key Concepts You'll See:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>@HiltAndroidApp:</strong> Enables dependency injection throughout the app</li>
+                            <li><strong>companion object:</strong> Provides static-like access to the application instance</li>
+                            <li><strong>lateinit var:</strong> Promise to initialize the instance before use</li>
+                            <li><strong>override fun onCreate():</strong> App startup lifecycle method</li>
+                        </ul>
+                        
+                        <div class="file-explore-card">
+                            <h4><i class="fas fa-folder-open"></i> Files to Open:</h4>
+                            <ul>
+                                <li><code>app/src/main/java/org/breezyweather/BreezyWeather.kt</code></li>
+                                <li><code>app/src/main/java/org/breezyweather/Migrations.kt</code></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="memory-hack">
+                            <h4><i class="fas fa-lightbulb"></i> What to Look For:</h4>
+                            <p>Notice how the Application class uses Hilt for dependency injection and sets up global app configuration like dark mode and notification channels.</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'weather-models':
+                    titleElement.textContent = 'Weather Data Models';
+                    contentElement.innerHTML = `
+                        <p>The weather model directory contains data classes that represent different aspects of weather information.</p>
+                        
+                        <h4>📦 Key Data Classes:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>Wind.kt:</strong> Wind speed, direction, and gusts with smart arrow indicators</li>
+                            <li><strong>Temperature.kt:</strong> Temperature values with unit conversion</li>
+                            <li><strong>Weather.kt:</strong> Main weather data container</li>
+                            <li><strong>Precipitation.kt:</strong> Rain and snow information</li>
+                        </ul>
+                        
+                        <div class="file-explore-card">
+                            <h4><i class="fas fa-folder-open"></i> Files to Open:</h4>
+                            <ul>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/Wind.kt</code></li>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/Temperature.kt</code></li>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/Weather.kt</code></li>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/Precipitation.kt</code></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="memory-hack">
+                            <h4><i class="fas fa-magic"></i> What to Look For:</h4>
+                            <p>Notice the <strong>data class</strong> keyword, <strong>nullable types</strong> (Double?), <strong>default parameters</strong>, and <strong>custom getters</strong> that calculate derived values like wind direction arrows.</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'weather-enums':
+                    titleElement.textContent = 'Weather Condition Enums';
+                    contentElement.innerHTML = `
+                        <p>Enum classes provide type-safe constants for weather conditions, ensuring only valid weather states are used throughout the app.</p>
+                        
+                        <h4>🏷️ Key Enum Classes:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>WeatherCode.kt:</strong> Main weather conditions (clear, cloudy, rain, etc.)</li>
+                            <li><strong>AlertSeverity.kt:</strong> Weather alert severity levels</li>
+                            <li><strong>PrecipitationType.kt:</strong> Types of precipitation</li>
+                        </ul>
+                        
+                        <div class="file-explore-card">
+                            <h4><i class="fas fa-folder-open"></i> Files to Open:</h4>
+                            <ul>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/WeatherCode.kt</code></li>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/AlertSeverity.kt</code></li>
+                                <li><code>domain/src/main/java/breezyweather/domain/weather/model/PrecipitationType.kt</code></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="memory-hack">
+                            <h4><i class="fas fa-shield-alt"></i> What to Look For:</h4>
+                            <p>Notice the <strong>enum class</strong> declaration, <strong>constructor parameters</strong> for additional data, <strong>companion object</strong> utility functions, and how they work with <strong>when expressions</strong>.</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'extensions':
+                    titleElement.textContent = 'Extension Functions';
+                    contentElement.innerHTML = `
+                        <p>Extension functions add new capabilities to existing classes without modifying their source code - one of Kotlin's most powerful features!</p>
+                        
+                        <h4>🪄 Extension Categories:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>DateExtensions.kt:</strong> Weather-specific date formatting</li>
+                            <li><strong>ContextExtensions.kt:</strong> Android context utilities</li>
+                            <li><strong>NumberExtensions.kt:</strong> Number formatting helpers</li>
+                        </ul>
+                        
+                        <div class="file-explore-card">
+                            <h4><i class="fas fa-folder-open"></i> Files to Open:</h4>
+                            <ul>
+                                <li><code>app/src/main/java/org/breezyweather/common/extensions/DateExtensions.kt</code></li>
+                                <li><code>app/src/main/java/org/breezyweather/common/extensions/ContextExtensions.kt</code></li>
+                                <li><code>app/src/main/java/org/breezyweather/common/extensions/NumberExtensions.kt</code></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="memory-hack">
+                            <h4><i class="fas fa-plus-circle"></i> What to Look For:</h4>
+                            <p>Notice the <strong>fun ClassName.extensionName()</strong> syntax, how <strong>this</strong> refers to the receiver object, and <strong>extension properties</strong> with custom getters.</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'database-interface':
+                    titleElement.textContent = 'Database Abstractions';
+                    contentElement.innerHTML = `
+                        <p>The database layer demonstrates clean architecture with interfaces, generics, and coroutines for async operations.</p>
+                        
+                        <h4>🔧 Key Interface Features:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>Suspend Functions:</strong> Non-blocking database operations</li>
+                            <li><strong>Generics:</strong> Type-safe operations for any data type</li>
+                            <li><strong>Flow Integration:</strong> Reactive data streams</li>
+                            <li><strong>Clean Separation:</strong> Interface vs implementation</li>
+                        </ul>
+                        
+                        <div class="file-explore-card">
+                            <h4><i class="fas fa-folder-open"></i> Files to Open:</h4>
+                            <ul>
+                                <li><code>data/src/main/java/breezyweather/data/DatabaseHandler.kt</code></li>
+                                <li><code>data/src/main/java/breezyweather/data/AndroidDatabaseHandler.kt</code></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="memory-hack">
+                            <h4><i class="fas fa-cogs"></i> What to Look For:</h4>
+                            <p>Notice the <strong>interface</strong> keyword, <strong>suspend fun</strong> declarations, <strong>generic type parameters</strong> (&lt;T&gt;), and <strong>Flow</strong> return types for reactive programming.</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'ui-components':
+                    titleElement.textContent = 'UI Components';
+                    contentElement.innerHTML = `
+                        <p>The UI layer contains Android Activities, Fragments, and ViewModels that use all the Kotlin concepts you've learned.</p>
+                        
+                        <h4>📱 UI Architecture:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>Activities:</strong> Main app screens and navigation</li>
+                            <li><strong>Fragments:</strong> Reusable UI components</li>
+                            <li><strong>ViewModels:</strong> UI state management with coroutines</li>
+                            <li><strong>Adapters:</strong> List and grid data presentation</li>
+                        </ul>
+                        
+                        <div class="file-explore-card">
+                            <h4><i class="fas fa-folder-open"></i> Directory to Explore:</h4>
+                            <ul>
+                                <li><code>app/src/main/java/org/breezyweather/ui/</code></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="memory-hack">
+                            <h4><i class="fas fa-eye"></i> What to Look For:</h4>
+                            <p>Notice how the UI components use <strong>data classes</strong> for state, <strong>sealed classes</strong> for UI states, <strong>coroutines</strong> for async operations, and <strong>extension functions</strong> for view utilities.</p>
+                        </div>
+                    `;
+                    break;
+            }
+
+            detailsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>

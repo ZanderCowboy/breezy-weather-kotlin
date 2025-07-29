@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Enum Classes - Kotlin Crash Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-list-alt"></i> Chapter 3: Enum Classes</h1>
+            <p>Type-safe constants and weather condition modeling</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="chapterProgress" style="width: 0%"></div>
+            </div>
+            <p id="progressText">0/3 sections completed</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                What are Enum Classes?
+            </h2>
+
+            <p>Enum classes represent a fixed set of constants in a type-safe way. Think of them as a group of related
+                constants that belong together, like weather conditions, days of the week, or user roles! 🏷️</p>
+
+            <div class="concept-card" onclick="completeSection('enum-basics')">
+                <h4><i class="fas fa-play-circle"></i> Core Concept: Type-Safe Constants</h4>
+                <p>Discover why enums are better than plain constants</p>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-tags"></i> Enum Class Benefits: S.A.F.E</h4>
+                <p><strong>S</strong>tructured constants - organized and grouped</p>
+                <p><strong>A</strong>uto-complete friendly - IDE helps you</p>
+                <p><strong>F</strong>ixed set of values - no invalid states</p>
+                <p><strong>E</strong>asy pattern matching - works great with when</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('vs-constants')">vs Constants</button>
+                    <button class="tab-btn" onclick="switchTab('enum-features')">Enum Features</button>
+                    <button class="tab-btn" onclick="switchTab('when-matching')">Pattern Matching</button>
+                </div>
+
+                <div class="tab-content active" id="vs-constants">
+                    <h3>🆚 Enum vs Plain Constants</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="background: #fed7d7; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #e53e3e;">❌ Plain Constants (Bad)</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-keyword">const val</span> CLEAR = <span class="kotlin-string">"clear"</span>
+<span class="kotlin-keyword">const val</span> CLOUDY = <span class="kotlin-string">"cloudy"</span>
+<span class="kotlin-keyword">const val</span> RAIN = <span class="kotlin-string">"rain"</span>
+
+<span class="kotlin-comment">// Problems:</span>
+<span class="kotlin-keyword">fun</span> getIcon(weather: <span class="kotlin-type">String</span>) {
+    <span class="kotlin-comment">// Can pass ANY string!</span>
+    <span class="kotlin-comment">// "sunny", "cloudy", "raining"</span>
+    <span class="kotlin-comment">// No type safety 😰</span>
+}</pre>
+                            </div>
+                            <ul style="color: #e53e3e; font-size: 0.9em;">
+                                <li>No type safety</li>
+                                <li>Can pass wrong values</li>
+                                <li>Hard to maintain</li>
+                                <li>No IDE assistance</li>
+                            </ul>
+                        </div>
+                        <div style="background: #e6fffa; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #38a169;">✅ Enum Class (Good)</h4>
+                            <div class="code-example" style="margin: 10px 0;">
+                                <pre style="font-size: 0.8em;"><span class="kotlin-keyword">enum class</span> <span class="kotlin-type">WeatherCode</span> {
+    CLEAR, CLOUDY, RAIN
+}
+
+<span class="kotlin-comment">// Type-safe function</span>
+<span class="kotlin-keyword">fun</span> getIcon(weather: <span class="kotlin-type">WeatherCode</span>) {
+    <span class="kotlin-comment">// Only valid weather codes!</span>
+    <span class="kotlin-comment">// Compiler enforces this ✅</span>
+}</pre>
+                            </div>
+                            <ul style="color: #38a169; font-size: 0.9em;">
+                                <li>Complete type safety</li>
+                                <li>Only valid values allowed</li>
+                                <li>Easy refactoring</li>
+                                <li>Great IDE support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="enum-features">
+                    <h3>🌟 Powerful Enum Features</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #4299e1; margin-bottom: 15px;">🎨 Enums Can Have:</h4>
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><strong>Properties:</strong> Store additional data with each constant</li>
+                            <li><strong>Methods:</strong> Define behavior for enum values</li>
+                            <li><strong>Constructors:</strong> Initialize properties</li>
+                            <li><strong>Companion Objects:</strong> Static utility functions</li>
+                            <li><strong>Interface Implementation:</strong> Shared behavior</li>
+                        </ul>
+                    </div>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Rich enum with properties and methods</span>
+<span class="kotlin-keyword">enum class</span> <span class="kotlin-type">WeatherCode</span>(<span class="kotlin-keyword">val</span> icon: <span class="kotlin-type">String</span>, <span class="kotlin-keyword">val</span> severity: <span class="kotlin-type">Int</span>) {
+    <span class="kotlin-string">CLEAR</span>(<span class="kotlin-string">"☀️"</span>, <span class="kotlin-string">1</span>),
+    <span class="kotlin-string">CLOUDY</span>(<span class="kotlin-string">"☁️"</span>, <span class="kotlin-string">2</span>),
+    <span class="kotlin-string">RAIN</span>(<span class="kotlin-string">"🌧️"</span>, <span class="kotlin-string">4</span>);
+    
+    <span class="kotlin-keyword">fun</span> isSevere() = severity > <span class="kotlin-string">3</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="when-matching">
+                    <h3>🎯 Perfect with When Expressions</h3>
+                    <p>Enums and <code>when</code> are a match made in heaven! The compiler ensures you handle all
+                        cases.</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Exhaustive when expressions</span>
+<span class="kotlin-keyword">fun</span> getDescription(weather: <span class="kotlin-type">WeatherCode</span>): <span class="kotlin-type">String</span> = <span class="kotlin-keyword">when</span> (weather) {
+    <span class="kotlin-type">WeatherCode</span>.CLEAR -> <span class="kotlin-string">"Beautiful sunny day!"</span>
+    <span class="kotlin-type">WeatherCode</span>.CLOUDY -> <span class="kotlin-string">"Overcast skies"</span>
+    <span class="kotlin-type">WeatherCode</span>.RAIN -> <span class="kotlin-string">"Bring an umbrella!"</span>
+    <span class="kotlin-comment">// Compiler error if you miss a case! 🛡️</span>
+}
+
+<span class="kotlin-comment">// Works great with sealed when</span>
+<span class="kotlin-keyword">val</span> recommendation = <span class="kotlin-keyword">when</span> (weather) {
+    <span class="kotlin-type">WeatherCode</span>.CLEAR, <span class="kotlin-type">WeatherCode</span>.CLOUDY -> <span class="kotlin-string">"Great for outdoor activities"</span>
+    <span class="kotlin-type">WeatherCode</span>.RAIN -> <span class="kotlin-string">"Stay indoors or bring rain gear"</span>
+}</pre>
+                    </div>
+                    <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p style="color: #38a169; margin: 0;"><strong>🛡️ Exhaustive Check:</strong> The compiler
+                            ensures you handle all enum values. Add a new enum constant? Compiler will tell you where to
+                            update your when expressions!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-cloud-sun"></i>
+                Real Code: Weather Condition Enums
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('weather-enums')">
+                <h4><i class="fas fa-play-circle"></i> Explore Weather Enums</h4>
+                <p>See how BreezyWeather uses enums for weather conditions</p>
+            </div>
+
+            <div class="file-explore-card">
+                <h4><i class="fas fa-folder-open"></i> Weather Enum Files:</h4>
+                <ul>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/WeatherCode.kt</code> - Weather
+                        conditions</li>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/AlertSeverity.kt</code> - Alert
+                        severity levels</li>
+                    <li><code>domain/src/main/java/breezyweather/domain/weather/model/PrecipitationType.kt</code> -
+                        Rain/snow types</li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                <pre><span class="kotlin-comment">// From WeatherCode.kt - Main weather condition enum</span>
+<span class="kotlin-keyword">enum class</span> <span class="kotlin-type">WeatherCode</span>(<span class="kotlin-keyword">val</span> id: <span class="kotlin-type">String</span>) {
+    <span class="kotlin-string">CLEAR</span>(<span class="kotlin-string">"clear"</span>),                    <span class="kotlin-comment">// ☀️ Sunny weather</span>
+    <span class="kotlin-string">PARTLY_CLOUDY</span>(<span class="kotlin-string">"partly_cloudy"</span>),    <span class="kotlin-comment">// ⛅ Partly cloudy</span>
+    <span class="kotlin-string">CLOUDY</span>(<span class="kotlin-string">"cloudy"</span>),                <span class="kotlin-comment">// ☁️ Overcast</span>
+    <span class="kotlin-string">RAIN</span>(<span class="kotlin-string">"rain"</span>),                    <span class="kotlin-comment">// 🌧️ Rainy weather</span>
+    <span class="kotlin-string">SNOW</span>(<span class="kotlin-string">"snow"</span>),                    <span class="kotlin-comment">// ❄️ Snow</span>
+    <span class="kotlin-string">SLEET</span>(<span class="kotlin-string">"sleet"</span>),                  <span class="kotlin-comment">// 🌨️ Mixed precipitation</span>
+    <span class="kotlin-string">HAIL</span>(<span class="kotlin-string">"hail"</span>),                    <span class="kotlin-comment">// 🧊 Hailstorm</span>
+    <span class="kotlin-string">FOG</span>(<span class="kotlin-string">"fog"</span>),                      <span class="kotlin-comment">// 🌫️ Foggy conditions</span>
+    <span class="kotlin-string">WIND</span>(<span class="kotlin-string">"wind"</span>),                    <span class="kotlin-comment">// 💨 Windy weather</span>
+    <span class="kotlin-string">THUNDERSTORM</span>(<span class="kotlin-string">"thunderstorm"</span>);    <span class="kotlin-comment">// ⛈️ Thunderstorm</span>
+
+    <span class="kotlin-comment">// 🔧 Companion object for utility functions</span>
+    <span class="kotlin-keyword">companion object</span> {
+        <span class="kotlin-comment">// 🔍 Find enum by string value (null-safe)</span>
+        <span class="kotlin-keyword">fun</span> getInstance(<span class="kotlin-keyword">value</span>: <span class="kotlin-type">String?</span>): <span class="kotlin-type">WeatherCode?</span> = 
+            <span class="kotlin-type">WeatherCode</span>.entries.firstOrNull { <span class="kotlin-comment">// New Kotlin way (.entries)</span>
+                it.id.equals(value, ignoreCase = <span class="kotlin-keyword">true</span>)
+            }
+    }
+}
+
+<span class="kotlin-comment">// Usage examples</span>
+<span class="kotlin-keyword">val</span> currentWeather = <span class="kotlin-type">WeatherCode</span>.getInstance(<span class="kotlin-string">"rain"</span>) <span class="kotlin-comment">// Returns RAIN</span>
+<span class="kotlin-keyword">val</span> invalidWeather = <span class="kotlin-type">WeatherCode</span>.getInstance(<span class="kotlin-string">"sunny"</span>) <span class="kotlin-comment">// Returns null</span></pre>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('enum-breakdown')">Code Analysis</button>
+                    <button class="tab-btn" onclick="switchTab('companion-deep-dive')">Companion Object</button>
+                    <button class="tab-btn" onclick="switchTab('enum-collections')">Enum Collections</button>
+                </div>
+
+                <div class="tab-content active" id="enum-breakdown">
+                    <h3>🔍 Code Breakdown</h3>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px;">
+                        <ul style="color: #4a5568; line-height: 1.8;">
+                            <li><code>enum class WeatherCode(val id: String)</code> - Enum with constructor parameter
+                            </li>
+                            <li><code>CLEAR("clear")</code> - Each enum constant gets an id property</li>
+                            <li><code>companion object</code> - Static utility functions for the enum</li>
+                            <li><code>.entries</code> - Modern way to get all enum values (replaces .values())</li>
+                            <li><code>firstOrNull { }</code> - Safely find matching enum or return null</li>
+                            <li><code>ignoreCase = true</code> - Case-insensitive string matching</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fffaf0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p style="color: #ed8936; margin: 0;"><strong>💡 Pro Tip:</strong> Always use companion object
+                            functions for string-to-enum conversion to handle invalid inputs gracefully!</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="companion-deep-dive">
+                    <h3>👥 Companion Object Deep Dive</h3>
+                    <p>Companion objects provide static-like functionality to enums:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-keyword">companion object</span> {
+    <span class="kotlin-comment">// 🔍 Safe string conversion</span>
+    <span class="kotlin-keyword">fun</span> getInstance(<span class="kotlin-keyword">value</span>: <span class="kotlin-type">String?</span>): <span class="kotlin-type">WeatherCode?</span> = 
+        <span class="kotlin-type">WeatherCode</span>.entries.firstOrNull {
+            it.id.equals(value, ignoreCase = <span class="kotlin-keyword">true</span>)
+        }
+    
+    <span class="kotlin-comment">// 🌧️ Get all precipitation types</span>
+    <span class="kotlin-keyword">fun</span> getPrecipitationTypes(): <span class="kotlin-type">List&lt;WeatherCode&gt;</span> = 
+        listOf(RAIN, SNOW, SLEET, HAIL)
+    
+    <span class="kotlin-comment">// ⚠️ Get severe weather conditions</span>
+    <span class="kotlin-keyword">fun</span> getSevereWeather(): <span class="kotlin-type">List&lt;WeatherCode&gt;</span> = 
+        listOf(THUNDERSTORM, HAIL, WIND)
+}</pre>
+                    </div>
+                    <p><strong>Benefits:</strong> Centralized logic, easy to test, clean API!</p>
+                </div>
+
+                <div class="tab-content" id="enum-collections">
+                    <h3>📚 Working with Enum Collections</h3>
+                    <p>Enums work perfectly with Kotlin collections:</p>
+                    <div class="code-example">
+                        <pre><span class="kotlin-comment">// Get all enum values</span>
+<span class="kotlin-keyword">val</span> allWeatherTypes = <span class="kotlin-type">WeatherCode</span>.entries <span class="kotlin-comment">// Modern way</span>
+<span class="kotlin-keyword">val</span> allWeatherTypesOld = <span class="kotlin-type">WeatherCode</span>.values() <span class="kotlin-comment">// Legacy way</span>
+
+<span class="kotlin-comment">// Filter and map operations</span>
+<span class="kotlin-keyword">val</span> precipitationIds = <span class="kotlin-type">WeatherCode</span>.entries
+    .filter { it <span class="kotlin-keyword">in</span> listOf(<span class="kotlin-type">WeatherCode</span>.RAIN, <span class="kotlin-type">WeatherCode</span>.SNOW) }
+    .map { it.id }
+
+<span class="kotlin-comment">// Use in sets for fast lookup</span>
+<span class="kotlin-keyword">val</span> severeWeather = setOf(
+    <span class="kotlin-type">WeatherCode</span>.THUNDERSTORM, 
+    <span class="kotlin-type">WeatherCode</span>.HAIL
+)
+
+<span class="kotlin-keyword">fun</span> isWeatherSevere(weather: <span class="kotlin-type">WeatherCode</span>) = 
+    weather <span class="kotlin-keyword">in</span> severeWeather <span class="kotlin-comment">// O(1) lookup!</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Practice: Enum Class Quiz
+            </h2>
+
+            <div class="concept-card" onclick="completeSection('practice')">
+                <h4><i class="fas fa-play-circle"></i> Test Your Enum Knowledge</h4>
+                <p>Match enum concepts with their benefits</p>
+            </div>
+
+            <div class="quiz-section">
+                <h3><i class="fas fa-brain"></i> Enum Class Quiz</h3>
+                <p>Drag and match the enum concepts!</p>
+
+                <div class="drag-drop-area">
+                    <div>
+                        <h4>Concepts</h4>
+                        <div class="drag-item" draggable="true" data-concept="enum-class">enum class</div>
+                        <div class="drag-item" draggable="true" data-concept="companion-object">companion object</div>
+                        <div class="drag-item" draggable="true" data-concept="entries">entries</div>
+                        <div class="drag-item" draggable="true" data-concept="when-exhaustive">when expression</div>
+                    </div>
+                    <div>
+                        <h4>Benefits</h4>
+                        <div class="drop-zone" data-answer="enum-class">
+                            Type-safe constants with properties and methods
+                        </div>
+                        <div class="drop-zone" data-answer="companion-object">
+                            Static utility functions for enum operations
+                        </div>
+                        <div class="drop-zone" data-answer="entries">
+                            Modern way to get all enum values
+                        </div>
+                        <div class="drop-zone" data-answer="when-exhaustive">
+                            Compiler ensures all enum cases are handled
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="checkQuizAnswers(3)">Check My Answers! 🎯</button>
+                <div id="quizResult3"></div>
+            </div>
+
+            <div class="memory-hack">
+                <h4><i class="fas fa-star"></i> Chapter 3 Summary</h4>
+                <p><strong>🏷️ Enum Classes:</strong> Type-safe constants with superpowers</p>
+                <p><strong>🎯 Perfect with When:</strong> Exhaustive pattern matching</p>
+                <p><strong>👥 Companion Objects:</strong> Static utility functions</p>
+                <p><strong>📚 Modern Collections:</strong> Use .entries instead of .values()</p>
+                <p><strong>🛡️ Type Safety:</strong> Compile-time protection from invalid values</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+                <button class="btn" onclick="navigateToChapter('chapter2.html')">
+                    <i class="fas fa-arrow-left"></i> Previous: Data Classes
+                </button>
+                <button class="btn" onclick="navigateToChapter('chapter4.html')">
+                    Next: Extension Functions <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        <h3><i class="fas fa-trophy"></i> Achievement Unlocked!</h3>
+        <p id="achievementText">Enum Expert! 📋</p>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let sectionsCompleted = 0;
+        const totalSections = 3;
+
+        function completeSection(sectionName) {
+            if (sectionsCompleted < totalSections) {
+                sectionsCompleted++;
+                updateChapterProgress(3, sectionsCompleted, totalSections);
+                updateProgressBar();
+
+                if (typeof learnConcept === 'function') {
+                    learnConcept('enums');
+                }
+
+                if (sectionsCompleted === totalSections) {
+                    showAchievement('Chapter 3 Complete! Enum Master! 🏷️');
+                }
+            }
+        }
+
+        function updateProgressBar() {
+            const percentage = (sectionsCompleted / totalSections) * 100;
+            document.getElementById('chapterProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${sectionsCompleted}/${totalSections} sections completed`;
+        }
+
+        // Initialize progress
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProgressBar();
+        });
+    </script>
+</body>
+
+</html>
